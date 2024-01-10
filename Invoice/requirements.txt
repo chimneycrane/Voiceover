@@ -1,0 +1,12 @@
+wheel
+tensorflow
+wave
+langid
+pydub
+moviepy
+eyed3
+noisereduce
+pyaudioanalysis
+pyannote.audio
+TTS
+spleeter
