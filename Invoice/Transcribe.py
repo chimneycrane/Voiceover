@@ -16,13 +16,13 @@ class Transcriber:
         self.audio_path = audio_path
         self.src_lang, self.dst_lang = src_lang, dst_lang
         self.diary = []
-        with open(work_dir+'\\diary.pickle', 'rb') as file:
+        with open(work_dir+'/diary.pickle', 'rb') as file:
             self.diary = pickle.load(file)
         
         #Whisper pipeline
         device = "cuda" if torch.cuda.is_available() else "cpu"
         torch_dtype = torch.float16
-        model_id = "openai/whisper-small"
+        model_id = "openai/whisper-large-v3"
         model = AutoModelForSpeechSeq2Seq.from_pretrained(
             model_id, torch_dtype=torch_dtype, low_cpu_mem_usage=True, use_safetensors=True
         )
@@ -47,38 +47,40 @@ class Transcriber:
     def _resolveDiary(self, time, text):
         for rec in self.diary:
             if time>rec[0] and time<rec[1]:
-                rec[3]+=text
-                break
+                return rec
             
     def _FitTranscript(self, chunks):
+        transcription = []
         if len(chunks)>0:
+
             for rec in self.diary:
                 rec.append('')
                 
             #match speaker
             for chunk in chunks:
                 avg_time = (chunk['timestamp'][1]+chunk['timestamp'][0])/2
-                self._resolveDiary(avg_time,chunk['text'])
+                speaker = next(filter(lambda x: x[0]<avg_time and x[1]>avg_time, self.diary), '')
+                transcription.append[chunk['timestamp'][0],chunk['timestamp'][1],speaker,chunk['text']] 
                 
             #stich sentense
             i=0
-            while i < len(self.diary)-1:
-                text = self.diary[i][3].strip()
+            while i < len(transcription)-1:
+                text = transcription[i][3].strip()
                 if text=='':
-                    self.diary.pop(i)
+                    transcription.pop(i)
                     i-=1
                 i+=1
             i=0
-            while i < len(self.diary)-1:
-                cur_speaker = self.diary[i][2]
-                nxt_speaker = self.diary[i+1][2]
-                text = self.diary[i][3].strip()
-                nxt_text = self.diary[i+1][3].strip()
+            while i < len(transcription)-1:
+                cur_speaker = transcription[i][2]
+                nxt_speaker = transcription[i+1][2]
+                text = transcription[i][3].strip()
+                nxt_text = transcription[i+1][3].strip()
                 if not(text.endswith('.') or text.endswith('?') or text.endswith('!')) and cur_speaker==nxt_speaker:
                     text += ' '+nxt_text
-                    self.diary[i][3] = text
-                    self.diary[i][1] = self.diary[i+1][1]
-                    self.diary.pop(i+1)
+                    transcription[i][3] = text
+                    transcription[i][1] = transcription[i+1][1]
+                    transcription.pop(i+1)
                     i-=1
                 i+=1
                 
@@ -87,11 +89,11 @@ class Transcriber:
         transcription = self.whisper(self.audio_path)
         
         self._FitTranscript(transcription['chunks'])
-        for rec in self.diary:
-            speaker = AudioSegment.silent(0,audio.frame_rate)
-            speaker.export(self.wd+f'\\{rec[2]}.wav', format='wav')
+        #for rec in self.diary:
+        #    speaker = AudioSegment.silent(0,audio.frame_rate)
+        #    speaker.export(self.wd+f'/{rec[2]}.wav', format='wav')
         i=0    
-        for rec in self.diary:
+        for rec in transcription:
             start = rec[0]
             end = rec[1]
             text = rec[3]
@@ -100,16 +102,16 @@ class Transcriber:
             
             referense_segment = audio[int(start*1000):int(end*1000)]
             if end-start<10:#short segments dont give good speaker referance
-                speaker_path = self.wd+f'\\{speaker}.wav'
+                speaker_path = self.wd+f'/{speaker}.wav'
                 speaker_aud = AudioSegment.from_file(speaker_path)
                 speaker_aud+=referense_segment
                 speaker_aud.export(speaker_path, format="wav")
                 rec.append(speaker_path)
             else:
-                referense_segment.export(self.wd+f'\\{i}.wav')
-                rec.append(self.wd+f'\\{i}.wav')
+                referense_segment.export(self.wd+f'/{i}.wav')
+                rec.append(self.wd+f'/{i}.wav')
             i+=1            
-        with open(self.wd+'\\transcript.pickle', 'wb') as file:
+        with open(self.wd+'/transcript.pickle', 'wb') as file:
             pickle.dump(self.diary, file, protocol=pickle.HIGHEST_PROTOCOL)
         
 if __name__ == "__main__":

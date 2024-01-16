@@ -13,7 +13,7 @@ class Synthesis():
         #voice gen with TTS and xtts-v2 model
         self.tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2", gpu=True)
         self.transcript = []
-        with open(work_dir+'\\transcript.pickle', 'rb') as file:
+        with open(work_dir+'/transcript.pickle', 'rb') as file:
             self.transcript = pickle.load(file)
         
     def _squeeze_audio(self, audio_path, start_time, end_time):
@@ -41,13 +41,13 @@ class Synthesis():
         for record in self.transcript:
             if record[3]!='':
                 self.tts.tts_to_file(text=record[3],
-                    file_path=self.wd+f'\\{i}.wav',
+                    file_path=self.wd+f'/{i}.wav',
                     speaker_wav=record[4], temperature=0.7,
                     language=self.accent)
-                output = self._squeeze_audio(self.wd+f'\\{i}.wav',record[0],record[1])
-                self.transcript[i].append(self.wd+f'\\{i}.wav')
+                output = self._squeeze_audio(self.wd+f'/{i}.wav',record[0],record[1])
+                self.transcript[i].append(self.wd+f'/{i}.wav')
             i+=1
-        self.Glue(self.wd+'\\result.wav')
+        self.Glue(self.wd+'/result.wav')
 
 if __name__ == "__main__":
     if len(sys.argv) < 4:

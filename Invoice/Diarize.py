@@ -33,7 +33,7 @@ class Diarizer:
             self._diary.append([start, end, speaker])
             segment = audio[start:end]
             
-        with open(diary_folder+'\\diary.pickle', 'wb') as file:
+        with open(diary_folder+'/diary.pickle', 'wb') as file:
             pickle.dump(self._diary, file, protocol=pickle.HIGHEST_PROTOCOL)
 
 #outputs separate audio chunks of speach in wav format and csv catalog into audio_path dir (first argument)
