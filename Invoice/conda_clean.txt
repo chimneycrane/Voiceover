@@ -1,5 +1,0 @@
-conda clean --all -y
-conda remove -n invoice --all -y
-winget uninstall Gyan.FFmpeg
-winget uninstall Anaconda.Miniconda3
-winget uninstall Nvidia.CUDA
