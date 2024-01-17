@@ -10,6 +10,6 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Missing argument audio_path")
     else:
-        replace_audio(sys.argv[1], sys.argv[2]+'\\result.wav', sys.argv[2]+'\\..\\result.mp4')
+        replace_audio(sys.argv[1], sys.argv[2]+'/result.wav', sys.argv[2]+'/../result.mp4')
 
 
