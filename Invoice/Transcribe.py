@@ -21,6 +21,7 @@ class Transcriber:
         
         #Whisper pipeline
         device = "cuda" if torch.cuda.is_available() else "cpu"
+        print(f'DEVICE: {device}')
         torch_dtype = torch.float16
         model_id = "openai/whisper-large-v3"
         model = AutoModelForSpeechSeq2Seq.from_pretrained(
