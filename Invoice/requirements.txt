@@ -464,7 +464,6 @@ tenacity==8.2.3
 tensorboard==2.15.1
 tensorboard-data-server==0.7.2
 tensorboardX==2.6.2.2
-tensorflow==2.15.0
 tensorflow-datasets==4.9.4
 tensorflow-estimator==2.15.0
 tensorflow-gcs-config==2.15.0
