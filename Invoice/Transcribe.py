@@ -9,6 +9,8 @@ import soundfile as sf
 import pickle
 import math
 
+#from faster_whisper import WhisperModel
+
 class Transcriber:
     def __init__(self, work_dir, audio_path, src_lang, dst_lang):
         
@@ -23,7 +25,7 @@ class Transcriber:
         device = "cuda" if torch.cuda.is_available() else "cpu"
         print(f'DEVICE: {device}')
         torch_dtype = torch.float16
-        model_id = "openai/whisper-large-v3"
+        model_id = "openai/whisper-small"
         model = AutoModelForSpeechSeq2Seq.from_pretrained(
             model_id, torch_dtype=torch_dtype, low_cpu_mem_usage=True, use_safetensors=True
         )
@@ -31,8 +33,11 @@ class Transcriber:
         processor = AutoProcessor.from_pretrained(model_id)
         self.whisper = pipeline(
             "automatic-speech-recognition",
-            model=model
-            chunk_length_s=30
+            model=model,tokenizer=processor.tokenizer,
+            feature_extractor=processor.feature_extractor,
+            max_new_tokens=128,
+            chunk_length_s=30,
+            batch_size=16,
             return_timestamps=True,
             torch_dtype=torch_dtype,
             device=device,
@@ -57,7 +62,7 @@ class Transcriber:
             for chunk in chunks:
                 avg_time = (chunk['timestamp'][1]+chunk['timestamp'][0])/2
                 speaker = next(filter(lambda x: x[0]<avg_time and x[1]>avg_time, self.diary), '')
-                transcription.append[chunk['timestamp'][0],chunk['timestamp'][1],speaker,chunk['text']] 
+                transcription.append([chunk['timestamp'][0],chunk['timestamp'][1],speaker,chunk['text']]) 
                 
             #stich sentense
             i=0
@@ -82,15 +87,18 @@ class Transcriber:
                 i+=1
                 
     def Transcribe(self):
+        #model1 = WhisperModel("small", device="cuda", compute_type="int8_float16")
+        #segments, info = model1.transcribe(self.audio_path, beam_size=5)
+    
         audio = AudioSegment.from_wav(self.audio_path)
         transcription = self.whisper(self.audio_path)
         
         self._FitTranscript(transcription['chunks'])
-        #for rec in self.diary:
-        #    speaker = AudioSegment.silent(0,audio.frame_rate)
-        #    speaker.export(self.wd+f'/{rec[2]}.wav', format='wav')
+        for rec in self.diary:
+            speaker = AudioSegment.silent(0,audio.frame_rate)
+            speaker.export(self.wd+f'/{rec[2]}.wav', format='wav')
         i=0    
-        for rec in transcription:
+        for rec in self.diary:
             start = rec[0]
             end = rec[1]
             text = rec[3]
