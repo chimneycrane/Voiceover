@@ -8,7 +8,7 @@ deep-translator==1.11.4
 protobuf==3.20.0
 anvil-uplink==0.4.2
 pyannote.audio==3.1.1
-spleeter==2.4.0 --install-option="--no-deps"
+spleeter==2.4.0 --no-deps
 ffmpeg-python==0.2.0
 httpx[http2]==0.19.0
 typer
