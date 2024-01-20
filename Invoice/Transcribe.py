@@ -8,7 +8,7 @@ import librosa
 import soundfile as sf
 import pickle
 import math
-
+import whisper
 #from faster_whisper import WhisperModel
 
 class Transcriber:
@@ -23,25 +23,7 @@ class Transcriber:
         
         #Whisper pipeline
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        print(f'DEVICE: {device}')
-        torch_dtype = torch.float16
-        model_id = "openai/whisper-small"
-        model = AutoModelForSpeechSeq2Seq.from_pretrained(
-            model_id, torch_dtype=torch_dtype, low_cpu_mem_usage=True, use_safetensors=True
-        )
-        model.to(device)
-        processor = AutoProcessor.from_pretrained(model_id)
-        self.whisper = pipeline(
-            "automatic-speech-recognition",
-            model=model,tokenizer=processor.tokenizer,
-            feature_extractor=processor.feature_extractor,
-            max_new_tokens=128,
-            chunk_length_s=30,
-            batch_size=16,
-            return_timestamps=True,
-            torch_dtype=torch_dtype,
-            device=device,
-        )
+        
     #Here we are matching transcript data with speaker diarization
     #Some voice generation models are limited on the size of prompt
     #So TODO will be more elaborate way of sentense separation
@@ -54,16 +36,26 @@ class Transcriber:
     def _FitTranscript(self, chunks):
         transcription = []
         if len(chunks)>0:
-
             for rec in self.diary:
                 rec.append('')
-                
+            
+            words = dict()
+            seconds = dict()    
+            for chunk in self.diary:
+                words[chunk[2]]=0
+                seconds[chunk[2]] =0
             #match speaker
             for chunk in chunks:
-                avg_time = (chunk['timestamp'][1]+chunk['timestamp'][0])/2
-                speaker = next(filter(lambda x: x[0]<avg_time and x[1]>avg_time, self.diary), '')
-                transcription.append([chunk['timestamp'][0],chunk['timestamp'][1],speaker,chunk['text']]) 
-                
+                avg_time = (chunk['end']+chunk['start'])/2
+                speaker = next(filter(lambda x: x[0]<avg_time and x[1]>avg_time or x[0]>chunk['start'], self.diary), '')
+                transcription.append([chunk['start'],chunk['end'],speaker[2],chunk['text']]) 
+                if len(chunk['text'])>0:
+                    words[speaker[2]]+=len(chunk['text'])
+                    seconds[speaker[2]] += chunk['end']-chunk['start']
+            wps = dict()
+            for key, _ in words.items():
+                wps[key] = words[key]/seconds[key]
+    
             #stich sentense
             i=0
             while i < len(transcription)-1:
@@ -73,27 +65,40 @@ class Transcriber:
                     i-=1
                 i+=1
             i=0
+
             while i < len(transcription)-1:
                 cur_speaker = transcription[i][2]
                 nxt_speaker = transcription[i+1][2]
                 text = transcription[i][3].strip()
                 nxt_text = transcription[i+1][3].strip()
-                if not(text.endswith('.') or text.endswith('?') or text.endswith('!')) and cur_speaker==nxt_speaker:
+                cur_wps = len(text)/(transcription[i][1]-transcription[i][0])
+                speed_div = wps[cur_speaker]/cur_wps
+                nxt_wps = len(nxt_text)/(transcription[i+1][1]-transcription[i+1][0])
+                nxt_speed_div = wps[nxt_speaker]/nxt_wps
+                merge = False
+                pause = transcription[i+1][0]-transcription[i][1]
+                if pause<1:
+                    merge = speed_div>1.3 and nxt_speed_div<0.9 or pause<0.3
+  
+                length = len(text)+len(nxt_text)+1
+                if (not(text.endswith('.') or text.endswith(';') or text.endswith('?') or text.endswith('!')) or merge) and cur_speaker==nxt_speaker and not length>=5000:
                     text += ' '+nxt_text
-                    transcription[i][3] = text
+                    transcription[i][3] = text.replace('.',';')
                     transcription[i][1] = transcription[i+1][1]
                     transcription.pop(i+1)
                     i-=1
                 i+=1
-                
+            self.diary = transcription
+            
     def Transcribe(self):
-        #model1 = WhisperModel("small", device="cuda", compute_type="int8_float16")
-        #segments, info = model1.transcribe(self.audio_path, beam_size=5)
-    
-        audio = AudioSegment.from_wav(self.audio_path)
-        transcription = self.whisper(self.audio_path)
-        
-        self._FitTranscript(transcription['chunks'])
+        model = whisper.load_model("small")
+        transcript = model.transcribe(
+            word_timestamps=True,
+            audio=self.audio_path
+        )
+        transcript['segments'][0]['start']=self.diary[0][0]
+        self._FitTranscript(transcript['segments'])
+        audio = AudioSegment.from_file(self.audio_path)
         for rec in self.diary:
             speaker = AudioSegment.silent(0,audio.frame_rate)
             speaker.export(self.wd+f'/{rec[2]}.wav', format='wav')

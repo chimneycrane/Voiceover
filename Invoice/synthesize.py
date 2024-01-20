@@ -44,7 +44,10 @@ class Synthesis():
                     file_path=self.wd+f'/{i}.wav',
                     speaker_wav=record[4], temperature=0.7,
                     language=self.accent)
-                output = self._squeeze_audio(self.wd+f'/{i}.wav',record[0],record[1])
+                output = AudioSegment.from_file(self.wd+f'/{i}.wav')
+                len_ratio = output.duration_seconds/(record[1]-record[0])
+                if len_ratio<1:
+                    output = self._squeeze_audio(self.wd+f'/{i}.wav',record[0],record[1])
                 self.transcript[i].append(self.wd+f'/{i}.wav')
             i+=1
         self.Glue(self.wd+'/result.wav')
