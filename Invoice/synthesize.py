@@ -11,7 +11,9 @@ class Synthesis():
         self.accent = accent
         self.background = background
         #voice gen with TTS and xtts-v2 model
-        self.tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2", gpu=True)
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2")
+        self.tts.to(device)
         self.transcript = []
         with open(work_dir+'/transcript.pickle', 'rb') as file:
             self.transcript = pickle.load(file)
@@ -40,13 +42,13 @@ class Synthesis():
         i=0
         for record in self.transcript:
             if record[3]!='':
-                self.tts.tts_to_file(text=record[3],
+                self.tts.tts_to_file(text=record[3].replace('.',' .'),
                     file_path=self.wd+f'/{i}.wav',
                     speaker_wav=record[4], temperature=0.7,
                     language=self.accent)
                 output = AudioSegment.from_file(self.wd+f'/{i}.wav')
                 len_ratio = output.duration_seconds/(record[1]-record[0])
-                if len_ratio<1:
+                if len_ratio>1:
                     output = self._squeeze_audio(self.wd+f'/{i}.wav',record[0],record[1])
                 self.transcript[i].append(self.wd+f'/{i}.wav')
             i+=1

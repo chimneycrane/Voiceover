@@ -81,9 +81,9 @@ class Transcriber:
                     merge = speed_div>1.3 and nxt_speed_div<0.9 or pause<0.3
   
                 length = len(text)+len(nxt_text)+1
-                if (not(text.endswith('.') or text.endswith(';') or text.endswith('?') or text.endswith('!')) or merge) and cur_speaker==nxt_speaker and not length>=5000:
+                if (not(text.endswith('.') or text.endswith('?') or text.endswith('!')) or merge) and cur_speaker==nxt_speaker and not length>=5000:
                     text += ' '+nxt_text
-                    transcription[i][3] = text.replace('.',';')
+                    transcription[i][3] = text.replace('.',' .')
                     transcription[i][1] = transcription[i+1][1]
                     transcription.pop(i+1)
                     i-=1
@@ -111,7 +111,7 @@ class Transcriber:
             rec[3] = GoogleTranslator(source=self.src_lang, target=self.dst_lang).translate(text)
             
             referense_segment = audio[int(start*1000):int(end*1000)]
-            if end-start<10:#short segments dont give good speaker referance
+            if end-start<4:#short segments dont give good speaker referance
                 speaker_path = self.wd+f'/{speaker}.wav'
                 speaker_aud = AudioSegment.from_file(speaker_path)
                 speaker_aud+=referense_segment
