@@ -48,8 +48,8 @@ class Transcriber:
             for chunk in chunks:
                 avg_time = (chunk['end']+chunk['start'])/2
                 speaker = next(filter(lambda x: x[0]<avg_time and x[1]>avg_time or x[0]>chunk['start'], self.diary), '')
-                transcription.append([chunk['start'],chunk['end'],speaker[2],chunk['text']]) 
                 if len(chunk['text'])>0:
+                    transcription.append([chunk['start'],chunk['end'],speaker[2],chunk['text']]) 
                     words[speaker[2]]+=len(chunk['text'])
                     seconds[speaker[2]] += chunk['end']-chunk['start']
             wps = dict()
@@ -73,12 +73,10 @@ class Transcriber:
                 nxt_text = transcription[i+1][3].strip()
                 cur_wps = len(text)/(transcription[i][1]-transcription[i][0])
                 speed_div = wps[cur_speaker]/cur_wps
-                nxt_wps = len(nxt_text)/(transcription[i+1][1]-transcription[i+1][0])
-                nxt_speed_div = wps[nxt_speaker]/nxt_wps
                 merge = False
                 pause = transcription[i+1][0]-transcription[i][1]
-                if pause<1:
-                    merge = speed_div>1.3 and nxt_speed_div<0.9 or pause<0.3
+                if pause<3:
+                    merge = speed_div>1.3 or pause<1
   
                 length = len(text)+len(nxt_text)+1
                 if (not(text.endswith('.') or text.endswith('?') or text.endswith('!')) or merge) and cur_speaker==nxt_speaker and not length>=5000:
@@ -111,15 +109,15 @@ class Transcriber:
             rec[3] = GoogleTranslator(source=self.src_lang, target=self.dst_lang).translate(text)
             
             referense_segment = audio[int(start*1000):int(end*1000)]
-            if end-start<4:#short segments dont give good speaker referance
-                speaker_path = self.wd+f'/{speaker}.wav'
-                speaker_aud = AudioSegment.from_file(speaker_path)
-                speaker_aud+=referense_segment
-                speaker_aud.export(speaker_path, format="wav")
-                rec.append(speaker_path)
-            else:
-                referense_segment.export(self.wd+f'/{i}.wav')
-                rec.append(self.wd+f'/{i}.wav')
+            #if end-start<3:#short segments dont give good speaker referance
+            speaker_path = self.wd+f'/{speaker}.wav'
+            speaker_aud = AudioSegment.from_file(speaker_path)
+            speaker_aud+=referense_segment
+            speaker_aud.export(speaker_path, format="wav")
+            rec.append(speaker_path)
+            #else:
+            #    referense_segment.export(self.wd+f'/{i}.wav')
+            #    rec.append(self.wd+f'/{i}.wav')
             i+=1            
         with open(self.wd+'/transcript.pickle', 'wb') as file:
             pickle.dump(self.diary, file, protocol=pickle.HIGHEST_PROTOCOL)

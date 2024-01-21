@@ -42,7 +42,7 @@ class Synthesis():
         i=0
         for record in self.transcript:
             if record[3]!='':
-                self.tts.tts_to_file(text=record[3].replace('.',' .'),
+                self.tts.tts_to_file(text=record[3].replace(';','.').replace('.',' .'),
                     file_path=self.wd+f'/{i}.wav',
                     speaker_wav=record[4], temperature=0.7,
                     language=self.accent)
