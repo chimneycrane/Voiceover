@@ -1,6 +1,6 @@
 conda create -n invoice python=3.10 -y
 conda activate invoice
-conda install -y cudatoolkit -c nvidia
+conda install -y cudatoolkit -c conda-forge
 conda install -y cudnn -c nvidia
 conda install -y cuda -c nvidia
 conda install -y -c conda-forge ffmpeg libsndfile
@@ -15,3 +15,4 @@ pip install spleeter
 pip install audiostretchy
 pip install accelerate
 pip install deep-translator
+pip install transformers==4.36.2 --force-reinstall
