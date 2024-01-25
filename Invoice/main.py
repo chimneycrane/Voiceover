@@ -21,7 +21,8 @@ if __name__ == "__main__":
         arg3 = sys.argv[1]+'/intermitent_stereo.wav'
         subprocess.run('python '+os.getcwd()+f"/Transcribe.py {arg1} {arg} {sys.argv[3]} {sys.argv[4]}")
         subprocess.run('python '+os.getcwd()+f"/Synthesize.py {arg1} {sys.argv[5]} {arg2}")
-        subprocess.run('python '+os.getcwd()+f"/RecoverVideo.py {sys.argv[2]} {sys.argv[1]} {left} {right}")
+        arg4 = arg1+'/result.wav'
+        subprocess.run('python '+os.getcwd()+f"/RecoverVideo.py {sys.argv[2]} {arg4} {sys.argv[1]}")
         shutil.rmtree(arg1)
         os.remove(arg)
         os.remove(arg2)
