@@ -1,4 +1,9 @@
-from setuptools import setup, find_packages
+from setuptools import setup, Command, find_packages
+
+class CustomInstallCommand(Command):
+    def run(self):
+        import subprocess
+        subprocess.call(['pip', 'install', 'protobuf==3.20','--force-install'])
 
 setup(
     name='Invoice',  # Replace with your desired package name
@@ -18,7 +23,7 @@ setup(
         'https://download.pytorch.org/whl/cu121'  # Specify the index URL
         ,'git+https://github.com/m3hrdadfi/soxan.git'],
     extras_require={
-        'tts': ['numpy==1.23.0'],  # Specific version for tts
+        'proto': ['protobuf==3.20.0'],  # Specific version for tts
     },
     install_requires=[
         'numpy==1.22.0'
@@ -42,8 +47,10 @@ setup(
        ,'ipython==7.34.0'
        ,'ffmpeg-python==0.2.0'
        ,'language-tool-python==2.7.1'
-       ,'protobuf==3.20'
        ,'lida==0.0.10'
        ,'click==8.0'
-    ]
+    ],
+    cmdclass={
+        'custom_install': CustomInstallCommand,
+    }
 )
