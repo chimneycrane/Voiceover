@@ -23,7 +23,7 @@ class Viddub:
         self.vocals, self.accompaniment = self.ExtractVoice()
     
 if __name__ == "__main__":
-    if len(sys.argv) < 4:
+    if len(sys.argv) < 2:
         print("Missing arguments")
     else:
         dubber = Viddub()
