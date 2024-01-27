@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='Invoice',  # Replace with your desired package name
-    python_requires='3.10'
+    python_requires='>=3.10',
     version='1.0.0',  # Replace with your desired version
     description='Video dubbing package',
     author='Alex Don',
