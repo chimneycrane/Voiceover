@@ -44,6 +44,6 @@ setup(
        ,'language-tool-python==2.7.1'
        ,'protobuf==3.20'
        ,'lida==0.0.10'
-       ,'click==80'
+       ,'click==8.0'
     ]
 )
