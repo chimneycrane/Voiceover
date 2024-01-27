@@ -19,7 +19,7 @@ setup(
         ,'git+https://github.com/m3hrdadfi/soxan.git'],
     extras_require={
         'tts': ['numpy==1.23.0'],  # Specific version for tts
-    }
+    },
     install_requires=[
         'numpy==1.23.0'
        ,'openai-whisper==20231117'
