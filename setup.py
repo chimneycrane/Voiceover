@@ -62,7 +62,7 @@ setup(
        ,'num2words==0.5.13              '
        ,'numpy==1.26.3                  '
        ,'omegaconf==2.3.0               '
-       ,'openai-whisper==20231117       '
+       ,'openai-whisper       '
        ,'optuna==3.5.0                  '
        ,'primePy==1.3                   '
        ,'protobuf==3.20.0               '
