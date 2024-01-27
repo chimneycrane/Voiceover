@@ -8,7 +8,6 @@ import math
 import whisper
 from language_tool_python import LanguageTool
 from deep_translator import GoogleTranslator
-import spacy
 import numpy as np
 import ExtractFeatures
 
@@ -155,7 +154,7 @@ class Transcriber:
         tool = LanguageTool(self.dst_lang)
         for rec in self.diary:
             if grammar_modifier[rec[2]]=='':
-                grammar_modifier[rec[2]]=ExtractFeatures.get_voice_feature([rec[4]])
+                grammar_modifier[rec[2]]=ExtractFeatures.predict([rec[4]], audio.frame_rate)
             feature = grammar_modifier[rec[2]]
             translation = GoogleTranslator(source=self.src_lang, target=self.dst_lang).translate(f'(/{feature}): '+rec[3]).split('):')[1]
             rec[3] = tool.correct(translation)
