@@ -31,7 +31,8 @@ setup(
         'proto': ['protobuf==3.20.0'],  # Specific version for tts
     },
     install_requires=[
-        'rpy2==3.5.15'
+        'typer'
+       ,'rpy2==3.5.15'
        ,'pandas'
        ,'scipy'
        ,'xgboost'
