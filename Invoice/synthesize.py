@@ -2,7 +2,6 @@ import sys
 import torch
 import pickle
 from TTS.api import TTS
-from audiostretchy.stretch import stretch_audio
 from pydub import AudioSegment
 import soundstretch
 
