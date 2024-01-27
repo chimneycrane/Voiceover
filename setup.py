@@ -18,7 +18,7 @@ setup(
         'https://download.pytorch.org/whl/cu121'  # Specify the index URL
         ,'git+https://github.com/m3hrdadfi/soxan.git'],
     install_requires=[
-        'numpy==1.22'
+        'numpy==1.22','numpy==1.23'
        ,'openai-whisper==20231117'
        ,'TTS==0.22.0'
        ,'torch==2.1.1'
