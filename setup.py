@@ -15,8 +15,7 @@ setup(
     },
     dependency_links=[
         'https://download.pytorch.org/whl/cu121'  # Specify the index URL
-    ],
-    dependency_links=['git+https://github.com/m3hrdadfi/soxan.git'],
+        ,'git+https://github.com/m3hrdadfi/soxan.git'],
     install_requires=[
         'openai-whisper'
        ,'TTS'
