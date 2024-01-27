@@ -1,15 +1,13 @@
 import sys
 import torch
 import pickle
-from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
 from pydub import AudioSegment
-from deep_translator import GoogleTranslator
-import librosa
-import soundfile as sf
 import pickle
 import math
 import whisper
-#from faster_whisper import WhisperModel
+from language_tool_python import LanguageTool
+import spacy
+import numpy as np
 
 class Transcriber:
     def __init__(self, work_dir, audio_path, src_lang, dst_lang):
@@ -40,7 +38,7 @@ class Transcriber:
                 rec.append('')
             
             words = dict()
-            seconds = dict()    
+            seconds = dict()
             for chunk in self.diary:
                 words[chunk[2]]=0
                 seconds[chunk[2]] =0
@@ -52,11 +50,12 @@ class Transcriber:
                     transcription.append([chunk['start'],chunk['end'],speaker[2],chunk['text']]) 
                     words[speaker[2]]+=len(chunk['text'])
                     seconds[speaker[2]] += chunk['end']-chunk['start']
+            #words per second calculation
             wps = dict()
             for key, _ in words.items():
                 wps[key] = words[key]/seconds[key]
     
-            #stich sentense
+            #remove empty text, correct grammar
             i=0
             while i < len(transcription)-1:
                 text = transcription[i][3].strip()
@@ -64,28 +63,48 @@ class Transcriber:
                     transcription.pop(i)
                     i-=1
                 i+=1
+            
+            #calculate 80 percentile pauses length
             i=0
-
+            pauses = []
+            while i < len(transcription)-2:
+                pause = transcription[i+1][0] - transcription[i][1]
+                if pause>0.0:
+                    pauses.append(transcription[i+1][0] - transcription[i][1])
+                i+=1            
+            npauses= np.array(pauses)
+            threshold = np.percentile(npauses, 80)
+            npauses = npauses[npauses <= threshold]
+            avg_pause = npauses.mean()
+            #stich sentense
+            i=0
             while i < len(transcription)-1:
                 cur_speaker = transcription[i][2]
                 nxt_speaker = transcription[i+1][2]
-                text = transcription[i][3].strip()
+                text = transcription[i][3]
                 nxt_text = transcription[i+1][3].strip()
                 cur_wps = len(text)/(transcription[i][1]-transcription[i][0])
                 speed_div = wps[cur_speaker]/cur_wps
                 merge = False
                 pause = transcription[i+1][0]-transcription[i][1]
-                if pause<3:
-                    merge = speed_div>1.3 or pause<1
-  
                 length = len(text)+len(nxt_text)+1
-                if (not(text.endswith('.') or text.endswith('?') or text.endswith('!')) or merge) and cur_speaker==nxt_speaker and not length>=5000:
+                merge = (speed_div>1.3 or pause<avg_pause) and cur_speaker==nxt_speaker and not length>=5000
+  
+                if not(text.endswith('.') or text.endswith('?') or text.endswith('!')) or merge :
                     text += ' '+nxt_text
-                    transcription[i][3] = text.replace('.',' .')
+                    transcription[i][3] = text
                     transcription[i][1] = transcription[i+1][1]
                     transcription.pop(i+1)
                     i-=1
                 i+=1
+            #remove empty text, correct grammar
+            i=0
+            tool = LanguageTool(self.src_lang)
+            while i < len(transcription)-1:
+                text = transcription[i][3].strip()
+                transcription[i][3] = tool.correct(text)
+                i+=1
+                
             self.diary = transcription
             
     def Transcribe(self):
@@ -95,6 +114,8 @@ class Transcriber:
             audio=self.audio_path
         )
         transcript['segments'][0]['start']=self.diary[0][0]
+        transcript['segments'][0]['end']=self.diary[0][1]
+        
         self._FitTranscript(transcript['segments'])
         audio = AudioSegment.from_file(self.audio_path)
         for rec in self.diary:
@@ -107,18 +128,21 @@ class Transcriber:
             text = rec[3]
             speaker = rec[2]
             rec[3] = GoogleTranslator(source=self.src_lang, target=self.dst_lang).translate(text)
-            
+            #save audio reference for every speaker
             referense_segment = audio[int(start*1000):int(end*1000)]
-            #if end-start<3:#short segments dont give good speaker referance
             speaker_path = self.wd+f'/{speaker}.wav'
             speaker_aud = AudioSegment.from_file(speaker_path)
             speaker_aud+=referense_segment
             speaker_aud.export(speaker_path, format="wav")
+            referense_segment.export(self.wd+f'/{i}.wav', format="wav")
             rec.append(speaker_path)
-            #else:
-            #    referense_segment.export(self.wd+f'/{i}.wav')
-            #    rec.append(self.wd+f'/{i}.wav')
-            i+=1            
+            
+            if end-start<6:#short segments dont give good speaker referance
+                rec.append(speaker_path)
+            else:
+                rec.append(self.wd+f'/{i}.wav')
+            i+=1
+            
         with open(self.wd+'/transcript.pickle', 'wb') as file:
             pickle.dump(self.diary, file, protocol=pickle.HIGHEST_PROTOCOL)
         
