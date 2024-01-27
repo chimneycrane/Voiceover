@@ -64,7 +64,7 @@ class Viddub:
         self._glue_files(self.project_folder,"vocals"), self._glue_files(self.project_folder,"accompaniment")
         vocals = self.project_folder+'/vocals_sep.wav'
         audio = AudioSegment.from_file(vocals)
-        lower_sample_rate = 24000
+        lower_sample_rate = 16000
         audio = audio.set_frame_rate(lower_sample_rate)
         audio.export(vocals, format='wav')
         return vocals, self.project_folder+'/accompaniment_sep.wav'
