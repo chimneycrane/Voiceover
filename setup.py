@@ -16,7 +16,7 @@ setup(
     setup_requires=['setuptools_git'],
     entry_points={
         'console_scripts': [
-            'invoice=Invoice.main:main',
+            'invoice=Invoice:main',
         ],
     },
     dependency_links=[
