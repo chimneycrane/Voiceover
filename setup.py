@@ -18,13 +18,13 @@ setup(
         'https://download.pytorch.org/whl/cu121'  # Specify the index URL
         ,'git+https://github.com/m3hrdadfi/soxan.git'],
     install_requires=[
-        'numpy==1,22'
+        'numpy==1.22'
        ,'openai-whisper==20231117'
        ,'TTS==0.22.0'
        ,'torch==2.1.1'
        ,'torchaudio==2.1.1'
        ,'spleeter==2.4.0'
-       ,'audiostretchy==1.2.0           '
+       ,'audiostretchy==1.2.5           '
        ,'httpx[http2]==0.19.0'
        ,'pytube==15.0.0'
        ,'pydub==0.25.1'
