@@ -5,7 +5,7 @@ import shutil
 
 #Arguments ProjectDirectory PathToVideo SouceLanguage DestinationLanguage AccentLanguage VoiceChannelLeft=0 VoiceChannelRight=1
 #Language uses code ex: en, ua, fr, de etc.
-if __name__ == "__main__":
+def main():
     if len(sys.argv) < 6:
         print("Missing arguments")
     else:
@@ -20,10 +20,13 @@ if __name__ == "__main__":
         arg2 = sys.argv[1]+'/accompaniment_sep.wav'
         arg3 = sys.argv[1]+'/intermitent_stereo.wav'
         subprocess.run('python '+os.getcwd()+f"/Transcribe.py {arg1} {arg} {sys.argv[3]} {sys.argv[4]}")
+        subprocess.run('python '+os.getcwd()+f"/Translate.py {arg1} {sys.argv[3]} {sys.argv[4]}")        
         subprocess.run('python '+os.getcwd()+f"/Synthesize.py {arg1} {sys.argv[5]} {arg2}")
         subprocess.run('python '+os.getcwd()+f"/RecoverVideo.py {sys.argv[2]} {arg1} {sys.argv[1]}")
         shutil.rmtree(arg1)
         os.remove(arg)
         os.remove(arg2)
         os.remove(arg3)
-        
+
+if __name__ == "__main__":
+    main()

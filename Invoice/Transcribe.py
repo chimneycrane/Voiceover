@@ -3,13 +3,10 @@ import sys
 import torch
 import pickle
 from pydub import AudioSegment
-import pickle
 import math
 import whisper
 from language_tool_python import LanguageTool
-from deep_translator import GoogleTranslator
 import numpy as np
-import ExtractFeatures
 
 class Transcriber:
     def __init__(self, work_dir, audio_path, src_lang, dst_lang):
@@ -125,9 +122,7 @@ class Transcriber:
         self._FitTranscript(transcript['segments'])
         audio = AudioSegment.from_file(self.audio_path)
         
-        grammar_modifier = dict()
         for rec in self.diary:
-            grammar_modifier[rec[2]]=''
             speaker = AudioSegment.silent(0,audio.frame_rate)
             speaker.export(self.wd+f'/{rec[2]}.wav', format='wav')
         i=0    
@@ -151,14 +146,7 @@ class Transcriber:
             else:
                 rec.append(self.wd+f'/{i}.wav')
             i+=1
-        tool = LanguageTool(self.dst_lang)
-
-        for rec in self.diary:
-            if grammar_modifier[rec[2]]=='':
-                grammar_modifier[rec[2]]=ExtractFeatures.predict(rec[4], audio.frame_rate)
-            feature = 'male' if grammar_modifier[rec[2]] == 'M' else 'female' 
-            translation = GoogleTranslator(source=self.src_lang, target=self.dst_lang).translate(f'({feature}): '+rec[3]).split('):')[1]
-            rec[3] = tool.correct(translation)
+            
         with open(self.wd+'/transcript.pickle', 'wb') as file:
             pickle.dump(self.diary, file, protocol=pickle.HIGHEST_PROTOCOL)
         
