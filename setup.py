@@ -27,7 +27,7 @@ setup(
        ,'torch==2.1.1'
        ,'torchaudio==2.1.1'
        ,'spleeter==2.4.0'
-       ,'audiostretchy==1.3.5           '
+       ,'soundstretch'
        ,'httpx[http2]==0.19.0'
        ,'pytube==15.0.0'
        ,'pydub==0.25.1'
