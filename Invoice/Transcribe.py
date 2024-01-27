@@ -6,6 +6,7 @@ import pickle
 import math
 import whisper
 from language_tool_python import LanguageTool
+from deep_translator import GoogleTranslator
 import spacy
 import numpy as np
 
