@@ -14,6 +14,7 @@ def main():
         #abstraction layer to free vram for each subroutine (some objects like Spleeter stay in vram even after exiting scope or autodisposal)
         left = 0 if len(sys.argv) else sys.argv[5]
         right = 1 if len(sys.argv) else sys.argv[6]
+        subprocess.run(['spleeter','separate','-o', {sys.argv[1]} ,'-p', 'spleeter:2stems', {sys.argv[2]}])
         subprocess.run(['python',script_directory+f"/SplitAudio.py", sys.argv[1], sys.argv[2], left, right])
         arg = sys.argv[1]+'/vocals_sep.wav'
         subprocess.run('python '+script_directory+f"/Diarize.py {arg}")
