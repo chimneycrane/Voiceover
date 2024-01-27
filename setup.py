@@ -26,6 +26,7 @@ setup(
        ,'TTS==0.22.0'
        ,'torch==2.1.1'
        ,'torchaudio==2.1.1'
+       ,'torchvision==0.16.1'
        ,'spleeter==2.4.0'
        ,'soundstretch'
        ,'httpx[http2]==0.19.0'
@@ -41,5 +42,8 @@ setup(
        ,'ipython==7.34.0'
        ,'ffmpeg-python==0.2.0'
        ,'language-tool-python==2.7.1'
+       ,'protobuf==3.20'
+       ,'lida==0.0.10'
+       ,'click==80'
     ]
 )
