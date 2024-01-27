@@ -1,3 +1,4 @@
+from re import L
 import sys
 import torch
 import pickle
@@ -9,6 +10,7 @@ from language_tool_python import LanguageTool
 from deep_translator import GoogleTranslator
 import spacy
 import numpy as np
+import ExtractFeatures
 
 class Transcriber:
     def __init__(self, work_dir, audio_path, src_lang, dst_lang):
@@ -44,13 +46,17 @@ class Transcriber:
                 words[chunk[2]]=0
                 seconds[chunk[2]] =0
             #match speaker
+            last_speaker = ''
             for chunk in chunks:
-                avg_time = (chunk['end']+chunk['start'])/2
+                avg_time = (chunk['seek'])
                 speaker = next(filter(lambda x: x[0]<avg_time and x[1]>avg_time or x[0]>chunk['start'], self.diary), '')
-                if len(chunk['text'])>0:
-                    transcription.append([chunk['start'],chunk['end'],speaker[2],chunk['text']]) 
+                if speaker == '':
+                    speaker=last_speaker
+                if len(chunk['text'])>0 and speaker!='':
+                    transcription.append([speaker[0],speaker[1],speaker[2],chunk['text']]) 
                     words[speaker[2]]+=len(chunk['text'])
                     seconds[speaker[2]] += chunk['end']-chunk['start']
+                last_speaer = speaker
             #words per second calculation
             wps = dict()
             for key, _ in words.items():
@@ -105,7 +111,7 @@ class Transcriber:
                 text = transcription[i][3].strip()
                 transcription[i][3] = tool.correct(text)
                 i+=1
-                
+            
             self.diary = transcription
             
     def Transcribe(self):
@@ -119,7 +125,10 @@ class Transcriber:
         
         self._FitTranscript(transcript['segments'])
         audio = AudioSegment.from_file(self.audio_path)
+        
+        grammar_modifier = dict()
         for rec in self.diary:
+            grammar_modifier[rec[2]]=''
             speaker = AudioSegment.silent(0,audio.frame_rate)
             speaker.export(self.wd+f'/{rec[2]}.wav', format='wav')
         i=0    
@@ -128,7 +137,7 @@ class Transcriber:
             end = rec[1]
             text = rec[3]
             speaker = rec[2]
-            rec[3] = GoogleTranslator(source=self.src_lang, target=self.dst_lang).translate(text)
+            #rec[3] = GoogleTranslator(source=self.src_lang, target=self.dst_lang).translate(text)
             #save audio reference for every speaker
             referense_segment = audio[int(start*1000):int(end*1000)]
             speaker_path = self.wd+f'/{speaker}.wav'
@@ -143,7 +152,12 @@ class Transcriber:
             else:
                 rec.append(self.wd+f'/{i}.wav')
             i+=1
-            
+        for rec in self.diary:
+            if grammar_modifier[rec[2]]=='':
+                feature = ExtractFeatures.get_voice_feature([grammar_modifier[rec[4]]])
+                grammar_modifier[rec[2]]=feature
+            feature = grammar_modifier[rec[2]]
+            rec[3] = GoogleTranslator(source=self.src_lang, target=self.dst_lang).translate(f'(/{feature}): '+rec[3]).split('):')[1]
         with open(self.wd+'/transcript.pickle', 'wb') as file:
             pickle.dump(self.diary, file, protocol=pickle.HIGHEST_PROTOCOL)
         
