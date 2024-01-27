@@ -119,4 +119,7 @@ setup(
             'invoice=Invoice.main:main',
         ],
     },
+    dependency_links=[
+        'https://download.pytorch.org/whl/cu121'  # Specify the index URL
+    ]
 )
