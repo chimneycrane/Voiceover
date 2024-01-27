@@ -115,7 +115,7 @@ class Transcriber:
             self.diary = transcription
             
     def Transcribe(self):
-        model = whisper.load_model("small")
+        model = whisper.load_model("medium")
         transcript = model.transcribe(
             word_timestamps=True,
             audio=self.audio_path
@@ -152,12 +152,13 @@ class Transcriber:
             else:
                 rec.append(self.wd+f'/{i}.wav')
             i+=1
+        tool = LanguageTool(self.dst_lang)
         for rec in self.diary:
             if grammar_modifier[rec[2]]=='':
-                feature = ExtractFeatures.get_voice_feature([grammar_modifier[rec[4]]])
-                grammar_modifier[rec[2]]=feature
+                grammar_modifier[rec[2]]=ExtractFeatures.get_voice_feature([rec[4]])
             feature = grammar_modifier[rec[2]]
-            rec[3] = GoogleTranslator(source=self.src_lang, target=self.dst_lang).translate(f'(/{feature}): '+rec[3]).split('):')[1]
+            translation = GoogleTranslator(source=self.src_lang, target=self.dst_lang).translate(f'(/{feature}): '+rec[3]).split('):')[1]
+            rec[3] = tool.correct(translation)
         with open(self.wd+'/transcript.pickle', 'wb') as file:
             pickle.dump(self.diary, file, protocol=pickle.HIGHEST_PROTOCOL)
         
