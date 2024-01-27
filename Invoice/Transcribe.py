@@ -139,7 +139,6 @@ class Transcriber:
             speaker_aud+=referense_segment
             speaker_aud.export(speaker_path, format="wav")
             referense_segment.export(self.wd+f'/{i}.wav', format="wav")
-            rec.append(speaker_path)
             
             if end-start<6:#short segments dont give good speaker referance
                 rec.append(speaker_path)

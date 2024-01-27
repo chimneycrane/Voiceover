@@ -12,7 +12,11 @@ pip install pydub
 pip install moviepy
 pip install pytube
 pip install spleeter
-pip install audiostretchy
+pip install soundstretch
 pip install accelerate
 pip install deep-translator
 pip install transformers==4.36.2 --force-reinstall
+pip install ffmpeg-python
+pip install numba
+pip install language-tool-python
+pip install protobuf==3.20 --force-reinstall
