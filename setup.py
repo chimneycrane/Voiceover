@@ -21,7 +21,7 @@ setup(
         'tts': ['numpy==1.23.0'],  # Specific version for tts
     },
     install_requires=[
-        'numpy==1.23.0'
+        'numpy==1.22.0'
        ,'openai-whisper==20231117'
        ,'TTS==0.22.0'
        ,'torch==2.1.1'
