@@ -3,7 +3,7 @@ from setuptools import setup, Command, find_packages
 class CustomInstallCommand(Command):
     def run(self):
         import subprocess
-        subprocess.call(['pip', 'install', 'protobuf==3.20','--force-install'])
+        subprocess.call(['pip', 'install', 'protobuf==3.20.0','--force-install'])
 
 setup(
     name='Invoice',  # Replace with your desired package name
@@ -21,7 +21,7 @@ setup(
     },
     dependency_links=[
         'https://download.pytorch.org/whl/cu121'  # Specify the index URL
-        ,'git+https://github.com/m3hrdadfi/soxan.git'],
+        ,'git+https://github.com/chimneycrane/grammar-helper-voice.git'],
     extras_require={
         'proto': ['protobuf==3.20.0'],  # Specific version for tts
     },
