@@ -47,8 +47,6 @@ setup(
        ,'ipython==7.34.0'
        ,'ffmpeg-python==0.2.0'
        ,'language-tool-python==2.7.1'
-       ,'lida==0.0.10'
-       ,'click==8.1.3'
     ],
     cmdclass={
         'custom_install': CustomInstallCommand,
