@@ -11,7 +11,7 @@ class Diarizer:
         self._audio_path=''
         self.device = "cuda" 
         if not torch.cuda.is_available():
-            device = "cpu"
+            self.device = "cpu"
         
         self.pipeline = Pipeline.from_pretrained(
             "pyannote/speaker-diarization-3.1",
