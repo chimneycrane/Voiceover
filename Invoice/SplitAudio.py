@@ -33,6 +33,8 @@ class Viddub:
             audio.export(output_folder+'/'+wildcard+f"_sep.wav", format="wav")
             for wav_file in wav_files:
                 os.remove(os.path.join(output_folder, wav_file))
+            
+            print('Glued',output_folder, wav_file)
         return output_folder+'/'+wildcard+f"_sep.wav"
     
     def ExtractVoice(self):
@@ -61,6 +63,7 @@ class Viddub:
             shutil.copy(path+f"/vocals_{i}.wav", self.project_folder)
             shutil.copy(path+f"/accompaniment_{i}.wav", self.project_folder)
             shutil.rmtree(path)
+            print('Processed', path+f"/vocals_{i}.wav")
         self._glue_files(self.project_folder,"vocals"), self._glue_files(self.project_folder,"accompaniment")
         vocals = self.project_folder+'/vocals_sep.wav'
         audio = AudioSegment.from_file(vocals)

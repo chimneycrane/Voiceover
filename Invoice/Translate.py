@@ -16,6 +16,6 @@ for rec in diary:
     speaker_aud = AudioSegment.from_file(rec[4])
     if grammar_modifier[rec[2]]=='':
         grammar_modifier[rec[2]]=predict(f"{rec[2]}.wav", sys.argv[2])
-    feature = 'male' if grammar_modifier[rec[2]] == 'M' else 'female'
-    translation = GoogleTranslator(source=sys.argv[3], target=sys.argv[4]).translate(f'({feature}): '+rec[3]).split('):')[1]
-    rec[3] = tool.correct(translation)
+    feature = grammar_modifier[rec[2]]
+    translation = GoogleTranslator(source=sys.argv[3], target=sys.argv[4]).translate(f'({feature}): '+rec[3])
+    rec[3] = tool.correct(translation).split('):')[1]
