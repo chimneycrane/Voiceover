@@ -17,12 +17,12 @@ def main():
         vocals = sys.argv[2].split('.mp4')[0]
         arg = sys.argv[2].split('.mp4')[0]+'/vocals.wav'
         subprocess.run(['python',script_directory+f"/SplitAudio.py", vocals])
-        subprocess.run('python '+script_directory+f"/Diarize.py {arg}")
+        subprocess.run(['python ',script_directory+f"/Diarize.py",arg])
         arg2 = vocals+'/accompaniment.wav'
-        subprocess.run('python '+script_directory+f"/Transcribe.py {vocals} {arg} {sys.argv[3]} {sys.argv[4]}")
-        subprocess.run('python '+script_directory+f"/Translate.py {vocals} {sys.argv[3]} {sys.argv[4]}")        
-        subprocess.run('python '+script_directory+f"/Synthesize.py {vocals} {sys.argv[5]} {arg2}")
-        subprocess.run('python '+script_directory+f"/RecoverVideo.py {sys.argv[2]} {vocals} {sys.argv[1]}")
+        subprocess.run(['python ',script_directory+f"/Transcribe.py", vocals, arg, sys.argv[3], sys.argv[4]])
+        subprocess.run(['python ',script_directory+f"/Translate.py", vocals, sys.argv[3], sys.argv[4]])        
+        subprocess.run(['python ',script_directory+f"/Synthesize.py", vocals, sys.argv[5], arg2])
+        subprocess.run(['python ',script_directory+f"/RecoverVideo.py", sys.argv[2], vocals, sys.argv[1]])
         shutil.rmtree(vocals)
         
 if __name__ == "__main__":
