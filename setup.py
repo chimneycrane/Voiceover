@@ -24,7 +24,6 @@ setup(
        ,'spleeter==2.4.0'
        ,'audiostretchy==1.3.5           '
        ,'httpx[http2]==0.19.0'
-       ,'numpy'
        ,'pytube==15.0.0'
        ,'pydub==0.25.1'
        ,'cffi==1.16.0'
