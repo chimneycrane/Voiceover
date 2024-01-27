@@ -22,7 +22,7 @@ def predict(audio_name, work_dir):
     xgtest = xgb.DMatrix(test_X)
 
     model = xgb.Booster({'nthread':4})
-    model.load_model(wd+"/voice-gender.model")
+    model.load_model(wd+"/voice-classify.model")
 
     pred_test_y = model.predict(xgtest)
 
