@@ -2,6 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='Invoice',  # Replace with your desired package name
+    python_requires='>=3.10'
     version='1.0.0',  # Replace with your desired version
     description='Video dubbing package',
     author='Alex Don',
@@ -17,7 +18,8 @@ setup(
         'https://download.pytorch.org/whl/cu121'  # Specify the index URL
         ,'git+https://github.com/m3hrdadfi/soxan.git'],
     install_requires=[
-        'openai-whisper==20231117'
+        'numpy'
+       ,'openai-whisper==20231117'
        ,'TTS==0.22.0'
        ,'torch==2.1.1'
        ,'torchaudio==2.1.1'
