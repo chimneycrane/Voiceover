@@ -15,20 +15,16 @@ def main():
         left = 0 if len(sys.argv) else sys.argv[5]
         right = 1 if len(sys.argv) else sys.argv[6]
         subprocess.run(['spleeter','separate','-o', {sys.argv[1]} ,'-p', 'spleeter:2stems', {sys.argv[2]}])
-        arg = sys.argv[1]+'/vocals_sep.wav'
-        subprocess.run(['python',script_directory+f"/SplitAudio.py", sys.argv[1]])
+        vocals = sys.argv[2].split('.mp4')[0]
+        arg = sys.argv[2].split('.mp4')[0]+'/vocals.wav'
+        subprocess.run(['python',script_directory+f"/SplitAudio.py", vocals])
         subprocess.run('python '+script_directory+f"/Diarize.py {arg}")
-        arg1 = sys.argv[1]+'/vocals_sep'
-        arg2 = sys.argv[1]+'/accompaniment_sep.wav'
-        arg3 = sys.argv[1]+'/intermitent_stereo.wav'
-        subprocess.run('python '+script_directory+f"/Transcribe.py {arg1} {arg} {sys.argv[3]} {sys.argv[4]}")
-        subprocess.run('python '+script_directory+f"/Translate.py {arg1} {sys.argv[3]} {sys.argv[4]}")        
-        subprocess.run('python '+script_directory+f"/Synthesize.py {arg1} {sys.argv[5]} {arg2}")
-        subprocess.run('python '+script_directory+f"/RecoverVideo.py {sys.argv[2]} {arg1} {sys.argv[1]}")
-        shutil.rmtree(arg1)
-        os.remove(arg)
-        os.remove(arg2)
-        os.remove(arg3)
-
+        arg2 = vocals+'/accompaniment.wav'
+        subprocess.run('python '+script_directory+f"/Transcribe.py {vocals} {arg} {sys.argv[3]} {sys.argv[4]}")
+        subprocess.run('python '+script_directory+f"/Translate.py {vocals} {sys.argv[3]} {sys.argv[4]}")        
+        subprocess.run('python '+script_directory+f"/Synthesize.py {vocals} {sys.argv[5]} {arg2}")
+        subprocess.run('python '+script_directory+f"/RecoverVideo.py {sys.argv[2]} {vocals} {sys.argv[1]}")
+        shutil.rmtree(vocals)
+        
 if __name__ == "__main__":
     main()

@@ -11,12 +11,12 @@ class Viddub:
         self.accompaniment  = ''
 
     def ExtractVoice(self):
-        vocals = self.project_folder+'/vocals_sep.wav'
+        vocals = self.project_folder+'/vocals.wav'
         audio = AudioSegment.from_file(vocals)
         lower_sample_rate = 16000
         audio = audio.set_frame_rate(lower_sample_rate)
         audio.export(vocals, format='wav')
-        return vocals, self.project_folder+'/accompaniment_sep.wav'
+        return vocals, self.project_folder+'/accompaniment.wav'
         
     def dub(self, proj_dir):    
         self.project_folder =               proj_dir
