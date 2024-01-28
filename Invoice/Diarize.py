@@ -12,7 +12,7 @@ class Diarizer:
         self.device = "cuda" 
         if not torch.cuda.is_available():
             self.device = "cpu"
-        
+        print(self.device)
         self.pipeline = Pipeline.from_pretrained(
             "pyannote/speaker-diarization-3.1",
             use_auth_token="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", )
