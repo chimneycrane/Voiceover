@@ -6,7 +6,7 @@ def run():
       
 setup(
     name='Invoice',  # Replace with your desired package name
-    python_requires='3.8',
+    python_requires='>=3.8',
     version='1.0.0',  # Replace with your desired version
     description='Video dubbing package',
     author='Alex Don',
