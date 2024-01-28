@@ -1,13 +1,13 @@
 from setuptools import setup, Command, find_packages
 
-class CustomInstallCommand(Command):
-    def run(self):
-        import subprocess
-        subprocess.call(['pip', 'install', 'protobuf==3.20.0','--force-install'])
-        import rpy2.robjects as robjects
-        robjects.r('install.packages("pbapply", repos = "https://cran.rstudio.com", quiet = TRUE)')
-        robjects.r('install.packages("tuneR", repos = "https://cran.rstudio.com", quiet = TRUE)')
-        robjects.r('install.packages("seewave", repos = "https://cran.rstudio.com", quiet = TRUE)')
+def run():
+    import subprocess
+    subprocess.call(['pip', 'install', 'protobuf==3.20.0','--force-install'])
+    import rpy2.robjects as robjects
+    robjects.r('install.packages("pbapply", repos = "https://cran.rstudio.com", quiet = TRUE)')
+    robjects.r('install.packages("tuneR", repos = "https://cran.rstudio.com", quiet = TRUE)')
+    robjects.r('install.packages("seewave", repos = "https://cran.rstudio.com", quiet = TRUE)')
+    robjects.r('install.packages("fftw", repos = "https://cran.rstudio.com", quiet = TRUE)')
         
 setup(
     name='Invoice',  # Replace with your desired package name
@@ -59,6 +59,6 @@ setup(
        ,'language-tool-python==2.7.1'
     ],
     cmdclass={
-        'custom_install': CustomInstallCommand,
+        'custom_install': run,
     }
 )
