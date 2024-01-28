@@ -6,7 +6,7 @@ from deep_translator import GoogleTranslator
 from pydub import AudioSegment
 
 diary =[]
-with open(sys.argv[2]+'/transcript.pickle', 'rb') as file:
+with open(sys.argv[1]+'/transcript.pickle', 'rb') as file:
     diary = pickle.load(file)
 grammar_modifier = dict()
 for rec in diary:

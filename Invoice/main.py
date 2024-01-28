@@ -20,8 +20,8 @@ def main():
         arg2 = proj+'/accompaniment.wav'
         subprocess.run(['python',script_directory+f"/SplitAudio.py", proj])
         subprocess.run(['python',script_directory+f"/Diarize.py",arg])
-        subprocess.run(['python',script_directory+f"/Transcribe.py", vocals, arg, sys.argv[3], sys.argv[4]])
-        subprocess.run(['python',script_directory+f"/Translate.py", vocals, sys.argv[3], sys.argv[4]])        
+        subprocess.run(['python',script_directory+f"/Transcribe.py", vocals, arg])
+        subprocess.run(['python',script_directory+f"/Translate.py", vocals, script_directory, sys.argv[3], sys.argv[4]])        
         subprocess.run(['python',script_directory+f"/Synthesize.py", vocals, sys.argv[5], arg2])
         subprocess.run(['python',script_directory+f"/RecoverVideo.py", sys.argv[2], vocals, sys.argv[1]])
         shutil.rmtree(vocals)
