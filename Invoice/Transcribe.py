@@ -150,7 +150,7 @@ class Transcriber:
             pickle.dump(self.diary, file, protocol=pickle.HIGHEST_PROTOCOL)
         
 if __name__ == "__main__":
-    if len(sys.argv) < 5:
+    if len(sys.argv) < 3:
         print("Missing argument audio_path")
     else:
         transcriber = Transcriber(sys.argv[1], sys.argv[2])
