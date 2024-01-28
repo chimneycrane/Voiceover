@@ -51,7 +51,7 @@ class Transcriber:
                 if len(chunk['text'])>0 and speaker!='':
                     transcription.append([speaker[0],speaker[1],speaker[2],chunk['text']]) 
                     words[speaker[2]]+=len(chunk['text'])
-                    seconds[speaker[2]] += chunk['end']-chunk['start']
+                    seconds[speaker[2]] += speaker[1]-speaker[0]
                 last_speaer = speaker
             #words per second calculation
             wps = dict()
