@@ -9,10 +9,11 @@ from language_tool_python import LanguageTool
 import numpy as np
 
 class Transcriber:
-    def __init__(self, work_dir, audio_path):
+    def __init__(self, work_dir, audio_path, src_lang):
         
         self.wd = work_dir
         self.audio_path = audio_path
+        self.src_lang = src_lang
         self.diary = []
         with open(work_dir+'/diary.pickle', 'rb') as file:
             self.diary = pickle.load(file)
@@ -150,8 +151,8 @@ class Transcriber:
             pickle.dump(self.diary, file, protocol=pickle.HIGHEST_PROTOCOL)
         
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 4:
         print("Missing argument audio_path")
     else:
-        transcriber = Transcriber(sys.argv[1], sys.argv[2])
+        transcriber = Transcriber(sys.argv[1], sys.argv[2], sys.argv[3])
         transcriber.Transcribe()
