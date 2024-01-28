@@ -112,7 +112,7 @@ class Transcriber:
             self.diary = transcription
             
     def Transcribe(self):
-        model = whisper.load_model("small")
+        model = whisper.load_model("large-v3")
         transcript = model.transcribe(
             word_timestamps=True,
             audio=self.audio_path
