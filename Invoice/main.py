@@ -14,11 +14,12 @@ def main():
         #abstraction layer to free vram for each subroutine (some objects like Spleeter stay in vram even after exiting scope or autodisposal)
         
         subprocess.run(['spleeter','separate','-o', sys.argv[1] ,'-p', 'spleeter:2stems', sys.argv[2]])
-        vocals = sys.argv[2].split('.mp4')[0]
+        proj = sys.argv[2].split('.mp4')[0]
         arg = sys.argv[2].split('.mp4')[0]+'/vocals.wav'
-        subprocess.run(['python',script_directory+f"/SplitAudio.py", vocals])
+        vocals = proj+'/vocals'
+        arg2 = proj+'/accompaniment.wav'
+        subprocess.run(['python',script_directory+f"/SplitAudio.py", proj])
         subprocess.run(['python',script_directory+f"/Diarize.py",arg])
-        arg2 = vocals+'/accompaniment.wav'
         subprocess.run(['python',script_directory+f"/Transcribe.py", vocals, arg, sys.argv[3], sys.argv[4]])
         subprocess.run(['python',script_directory+f"/Translate.py", vocals, sys.argv[3], sys.argv[4]])        
         subprocess.run(['python',script_directory+f"/Synthesize.py", vocals, sys.argv[5], arg2])
