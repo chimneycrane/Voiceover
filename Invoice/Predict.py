@@ -4,6 +4,10 @@ import pandas as pd
 import xgboost as xgb
 import rpy2.robjects as robjects
 
+robjects.r('install.packages("pbapply", repos = "https://cran.rstudio.com", quiet = TRUE)')
+robjects.r('install.packages("tuneR", repos = "https://cran.rstudio.com", quiet = TRUE)')
+robjects.r('install.packages("seewave", repos = "https://cran.rstudio.com", quiet = TRUE)')    
+robjects.r('install.packages("fftw", repos = "https://cran.rstudio.com", quiet = TRUE)')
 robjects.r('library(fftw)')
 robjects.r('library(tuneR)')
 robjects.r('library(pbapply)')
