@@ -50,7 +50,7 @@ setup(
        ,'cffi==1.16.0'
        ,'accelerate==0.26.1'
        ,'pyannote.audio==3.1.1'
-       ,'tensorflow==2.9.3'
+       ,'tensorflow'
        ,'transformers==4.36.2'
        ,'numba==0.58.1'
        ,'deep-translator==1.11.4'
