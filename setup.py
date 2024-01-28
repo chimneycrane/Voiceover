@@ -7,8 +7,7 @@ class CustomInstallCommand(Command):
         import rpy2.robjects as robjects
         robjects.r('install.packages("pbapply", repos = "https://cran.rstudio.com", quiet = TRUE)')
         robjects.r('install.packages("tuneR", repos = "https://cran.rstudio.com", quiet = TRUE)')
-        robjects.r('install.packages("seewave", repos = "https://cran.rstudio.com", quiet = TRUE)')    
-        robjects.r('install.packages("fftw", repos = "https://cran.rstudio.com", quiet = TRUE)')
+        robjects.r('install.packages("seewave", repos = "https://cran.rstudio.com", quiet = TRUE)')
         
 setup(
     name='Invoice',  # Replace with your desired package name
