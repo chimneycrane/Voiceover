@@ -56,7 +56,8 @@ class Transcriber:
             #words per second calculation
             wps = dict()
             for key, _ in words.items():
-                wps[key] = words[key]/seconds[key]
+                if seconds[key]>0.0:
+                    wps[key] = words[key]/seconds[key]
     
             #remove empty text, correct grammar
             i=0
