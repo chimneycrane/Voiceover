@@ -4,6 +4,11 @@ class CustomInstallCommand(Command):
     def run(self):
         import subprocess
         subprocess.call(['pip', 'install', 'protobuf==3.20.0','--force-install'])
+        import rpy2.robjects as robjects
+        robjects.r('install.packages("pbapply", repos = "https://cran.rstudio.com", quiet = TRUE)')
+        robjects.r('install.packages("tuneR", repos = "https://cran.rstudio.com", quiet = TRUE)')
+        robjects.r('install.packages("seewave", repos = "https://cran.rstudio.com", quiet = TRUE)')    
+        robjects.r('install.packages("fftw", repos = "https://cran.rstudio.com", quiet = TRUE)')
         
 setup(
     name='Invoice',  # Replace with your desired package name
@@ -13,7 +18,7 @@ setup(
     author='Alex Don',
     author_email='alex.don.8096@gmail.com',
     packages=find_packages(),
-    setup_requires=['setuptools_git'],
+    setup_requires=['setuptools_git','rpy2==3.5.15'],
     entry_points={
         'console_scripts': [
             'invoice=Invoice.main:main',
