@@ -24,7 +24,7 @@ class Synthesis():
         length_ms = audio.duration_seconds
         desired_length = end_time-start_time
         speed_factor = desired_length/length_ms
-        stretch = soundstretch.SoundStretch()
+        stretch = soundstretch.SoundStretch(audio_path, audio_path)
         stretch.open(audio_path)
         stretch.set_tempo(speed_factor)
         stretch.process()
