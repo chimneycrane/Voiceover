@@ -2,17 +2,11 @@ import os
 import subprocess
 import pandas as pd
 import xgboost as xgb
-import rpy2.robjects as robjects
-
-robjects.r('library(tuneR)')
-robjects.r('library(pbapply)')
-robjects.r('library(seewave)')
+from ExtractFeatures import *
 
 def predict(audio_name, work_dir):
     wd = os.getcwd()
-    robjects.r['source'](os.getcwd()+"/ExtractFeatures.R")
-    robjects.r['Extract'](audio_name, work_dir)
-    
+    Extract(audio_name, work_dir)
     features_to_use = ["meanfreq","sd","median","Q25","Q75","IQR","skew","kurt","sp.ent","sfm","mode","centroid","meanfun","minfun","maxfun","meandom","mindom","maxdom","dfrange","modindx"]
 
     test_df = pd.read_csv(work_dir+'/Features.csv')
