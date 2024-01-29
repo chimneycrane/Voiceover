@@ -24,11 +24,7 @@ class Synthesis():
         length_ms = audio.duration_seconds
         desired_length = end_time-start_time
         speed_factor = desired_length/length_ms
-        stretch = soundstretch.SoundStretch(audio_path, audio_path)
-        stretch.set_tempo(speed_factor)
-        stretch.process()
-        stretch.write(audio_path)
-        #stretch_audio(audio_path, audio_path, ratio=speed_factor)
+        stretch = soundstretch.SoundStretch(audio_path, audio_path, speed_factor)
         audio = AudioSegment.from_file(audio_path)
         first_n_seconds = audio[:desired_length * 1000]
         first_n_seconds.export(audio_path, format="wav")
