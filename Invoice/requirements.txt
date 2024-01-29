@@ -1,5 +1,4 @@
 typer
-rpy2==3.5.15
 pandas
 scipy
 xgboost
