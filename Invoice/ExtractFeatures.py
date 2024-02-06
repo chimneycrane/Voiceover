@@ -13,7 +13,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
         y = y[int(sr * start) : int(sr * end)]
 
     # Calculate spectrogram
-    S, P, t = librosa.stft(y, window_length=wl)
+    S, P, t = librosa.stft(y)
 
     # Apply bandpass filter
     fmin, fmax = bp
