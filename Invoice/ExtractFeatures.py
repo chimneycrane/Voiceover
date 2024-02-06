@@ -112,8 +112,6 @@ def specan3(X, bp=(0, 22), wl=2048, threshold=5, parallel=1):
     # Check for NaN values and invalid timings
     if np.any(np.isnan(np.concatenate((end, start)))):
         raise ValueError("NaN values found in start and/or end")
-    if not all(isinstance(v, (int, float)) for v in np.concatenate((end, start, selec))):
-        raise ValueError("Invalid types for start, end, and selec")
     if np.any(end - start < 0):
         raise ValueError("Start time greater than end time in some selections")
     if np.any(end - start > 20):
