@@ -49,8 +49,7 @@ setup(
        ,'ipython==7.34.0'
        ,'ffmpeg-python==0.2.0'
        ,'language-tool-python==2.7.1'
-       ,'protobuf==3.19.0'
-       ,'librosa==0.9.2'
+       ,'protobuf==3.20.0'
     ],
     cmdclass={
         'custom_install': run,
