@@ -4,6 +4,17 @@ import librosa.display
 import numpy as np
 import pandas as pd
 
+
+def create_bandpass_mask(freqs, sr=22050, n_fft=2048):
+    # Calculate filter frequencies in bins
+    fmin_bin = int(np.round(freqs[0] * n_fft / sr))
+    fmax_bin = int(np.round(freqs[1] * n_fft / sr)) + 1
+
+    # Create mask
+    mask = np.zeros(n_fft // 2 + 1, dtype=bool)
+    mask[fmin_bin:fmax_bin] = True
+    return mask
+
 def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     # Load audio data
     y, sr = librosa.load(sound_file, sr=None)
@@ -17,9 +28,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
 
     # Apply bandpass filter
     fmin, fmax = bp
-    mask = librosa.filters.freq_mask(
-        P, sr=sr, fmin=fmin, fmax=fmax, invert=True
-    )
+    mask = create_bandpass_mask([fmin,fmax],sr=sr, n_fft=wl)
     S = S[:, mask]
 
     # Feature extraction
