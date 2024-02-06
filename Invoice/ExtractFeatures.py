@@ -123,28 +123,11 @@ def specan3(X, bp=(0, 22), wl=2048, threshold=5, parallel=1):
     if not isinstance(parallel, int) or parallel < 1:
         raise ValueError("parallel must be a positive integer")
 
-    # Find existing sound files
-    available_files = [f for f in os.listdir(".") if f.endswith(".wav")]
-    missing_files = [f for f in sound_files if f not in available_files]
-    if missing_files:
-        raise ValueError(f"{len(missing_files)} .wav files not found: {', '.join(missing_files)}")
-
     # Select sound files and apply parallel processing
-    if parallel > 1:
-        from IPython.parallel import Client
-        c = Client()
-        d = np.where(np.isin(sound_files, available_files))[0]
-        sound_files, start, end, selec = sound_files[d], start[d], end[d], selec[d]
-        features = c.map(
-            _feature_extraction,
-            (sound_files, start, end, selec, bp, wl, threshold),
-            ordered=True,
-        )
-    else:
-        features = [
-            _feature_extraction(f, s, e, sl, bp, wl, threshold)
-            for f, s, e, sl in zip(sound_files, start, end, selec)
-        ]
+    features = [
+        _feature_extraction(f, s, e, sl, bp, wl, threshold)
+        for f, s, e, sl in zip(sound_files, start, end, selec)
+    ]
 
     # Combine features into data frame and rename columns
     df = pd.DataFrame(features).transpose()
@@ -174,7 +157,7 @@ def Extract(audio_path, wd):
     })
 
     # Extract features
-    acoustics = specan3(data, parallel=1)
+    acoustics = specan3(data)
 
     # Save features to CSV
     acoustics.to_csv("Features.csv", index=True)
