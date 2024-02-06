@@ -49,7 +49,7 @@ setup(
        ,'ipython==7.34.0'
        ,'ffmpeg-python==0.2.0'
        ,'language-tool-python==2.7.1'
-       ,'protobuf==3.19.6'
+       ,'protobuf==3.20.0'
        ,'librosa==0.9.2'
     ],
     cmdclass={
