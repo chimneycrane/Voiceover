@@ -4,6 +4,7 @@ import librosa.display
 import numpy as np
 import pandas as pd
 from scipy.stats import skew
+import math 
 
 def freq_mask(P, sr, fmin, fmax, invert=True):
     N_FFT = P.shape[0]
