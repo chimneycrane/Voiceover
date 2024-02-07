@@ -29,7 +29,12 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     # Apply bandpass filter
     fmin, fmax = bp
     mask = create_bandpass_mask([fmin,fmax],sr=sr, n_fft=wl)
-    S = S[:, mask]
+    S = None
+    if len(S.shape) == 2:
+        S = S[:, mask]
+    else:
+        # Handle 1D spectrogram case (adapt as needed)
+        S = S[mask]  # Reshape or implement alternative logic
 
     # Feature extraction
     analysis = librosa.feature.spectral_centroid(S=S, sr=sr)
