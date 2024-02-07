@@ -30,6 +30,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     mask = freq_mask(P, sr, fmin, fmax, invert=True)
     num_rows_S = S.shape[0]
     S = S * mask[:, np.newaxis]
+    S=S.astype(np.float32)
     # Feature extraction
     analysis = librosa.feature.spectral_centroid(S=S, sr=sr)
     mean_freq = analysis.mean() / 1000
