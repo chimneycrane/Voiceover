@@ -56,7 +56,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     # Option 1: Set negative values to small positive value (replace with desired approach)
     S[negative_indices] = 1e-8
     # Feature extraction
-    analysis = librosa.feature.spectral_centroid(S=S, sr=sr)[0]
+    analysis = librosa.feature.spectral_centroid(S=S, sr=sr)
     centroid = analysis.mean() / 1000
     mean_freq = centroid 
     sd = analysis.std() / 1000
