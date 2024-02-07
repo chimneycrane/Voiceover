@@ -14,6 +14,23 @@ def freq_mask(P, sr, fmin, fmax, invert=True):
 
     return mask
 
+def spectral_skew(data):
+    mean = np.mean(data)
+    variance = np.mean((data - mean)**2)
+    skew_value = skew((data - mean) / np.sqrt(variance))
+    return skew_value
+
+def spectral_kurtosis(data):
+    mean = np.mean(data)
+    variance = np.mean((data - mean)**2)
+    kurtosis_value = np.mean((data - mean)**4 / (variance**2))
+    return kurtosis_value
+
+def spectral_entropy(S):
+    S_norm = S / np.sum(S, axis=0, keepdims=True)
+    entropy = -np.sum(S_norm * np.log2(S_norm + np.finfo(float).eps), axis=0)
+    return entropy
+
 def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     # Load audio data
     y, sr = librosa.load(sound_file, sr=None)
@@ -37,19 +54,19 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     # Option 1: Set negative values to small positive value (replace with desired approach)
     S[negative_indices] = 1e-8
     # Feature extraction
-    analysis = librosa.feature.spectral_centroid(S=S, sr=sr)
-    mean_freq = analysis.mean() / 1000
+    analysis = librosa.feature.spectral_centroid(S=S, sr=sr)[0]
+    centroid = analysis.mean() / 1000
+    mean_freq = centroid 
     sd = analysis.std() / 1000
     median = np.median(analysis) / 1000
     q25 = np.percentile(analysis, 25) / 1000
     q75 = np.percentile(analysis, 75) / 1000
     iqr = q75 - q25
-    skew = librosa.feature.spectral_skewness(S=S, sr=sr)
-    kurt = librosa.feature.spectral_kurtosis(S=S, sr=sr)
-    spectral_entropy = librosa.feature.spectral_entropy(S=S, sr=sr)
+    skew = spectral_skew(analysis)
+    kurt = spectral_kurtosis(analysis)
+    spectral_entropy = -math.log2(1 / len(centroid))
     sfm = librosa.feature.spectral_flatness(S=S)
     mode = librosa.feature.mfcc(S=S, sr=sr)[1].mean() / 1000
-    centroid = librosa.feature.spectral_centroid(S=S, sr=sr).mean() / 1000
 
     # Peak frequency
     peak_freq = 0
