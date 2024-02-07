@@ -19,3 +19,4 @@ for rec in diary:
     feature = grammar_modifier[rec[2]]
     translation = GoogleTranslator(source=sys.argv[3], target=sys.argv[4]).translate(f'({feature}): '+rec[3])
     rec[3] = tool.correct(translation).split('):')[1]
+    print(rec[3])
