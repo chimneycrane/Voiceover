@@ -66,7 +66,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     iqr = q75 - q25
     skew = spectral_skew(analysis)
     kurt = spectral_kurtosis(analysis)
-    spectral_entropy = -np.log2(1 / len(centroid))
+    spectral_entropy = -np.log2(1 / centroid.size)
     sfm = librosa.feature.spectral_flatness(S=S)
     mode = librosa.feature.mfcc(S=S, sr=sr)[1].mean() / 1000
 
