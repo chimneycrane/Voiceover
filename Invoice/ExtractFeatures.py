@@ -26,7 +26,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     mean_freq = mean_freq / 1000  # Convert to kHz
     frequencies = librosa.fft_frequencies(sr=sr, n_fft=wl)
     frequency_sd = np.std(frequencies)
-    spectral_centroids = librosa.feature.spectral_centroid(audio, sr=sr)
+    spectral_centroids = librosa.feature.spectral_centroid(S=audio, sr=sr)
     median_frequency = librosa.hz_to_mel(librosa.median(spectral_centroids)) / 1000
     mel_spec = librosa.feature.melspectrogram(y=audio, sr=sr)
     mel_spec_db = librosa.power_to_db(mel_spec)
