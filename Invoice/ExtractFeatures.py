@@ -81,9 +81,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     max_f0 = np.max(f0) if len(f0) else np.nan
 
     # Dominant frequency parameters
-    dfreq = librosa.feature.delta_mfcc(
-        S=S, sr=sr, win_length=wl, window="hann", delta=2
-    )
+    dfreq = librosa.feature.delta(f0)
     mean_dfreq = np.mean(dfreq, axis=1).mean()
     min_dfreq = np.min(dfreq, axis=1).min()
     max_dfreq = np.max(dfreq, axis=1).max()
