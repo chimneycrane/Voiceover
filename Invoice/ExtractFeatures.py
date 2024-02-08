@@ -132,13 +132,7 @@ def specan3(X, bp=(0, 22), wl=2048, threshold=5, parallel=1):
     return df
 
 def Extract(audio_path, wd):
-    """
-    Extracts acoustic features from an audio file and saves them to a CSV file.
-
-    Args:
-        audio_path: Path to the audio file (.wav)
-        wd: Working directory to save the features
-    """
+    print('Extract')
 
     os.chdir(wd)  # Change working directory
 
