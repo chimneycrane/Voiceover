@@ -71,7 +71,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     mode = librosa.feature.mfcc(S=S, sr=sr)[1].mean() / 1000
 
     # Peak frequency
-    peak_freq = 0
+    peak_freq = librosa.core.estimate_tuning(y=y, sr=sr)
     # TODO: Implement peak frequency calculation using librosa functions
 
     # Fundamental frequency parameters
