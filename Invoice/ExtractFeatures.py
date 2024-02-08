@@ -5,99 +5,63 @@ import numpy as np
 import pandas as pd
 from scipy.stats import skew
 import math 
+from scipy.stats import kurtosis
 
-def freq_mask(P, sr, fmin, fmax, invert=True):
-    N_FFT = P.shape[0]
-    f_bins = np.linspace(0, sr / 2, int(N_FFT // 2 + 1))
-
-    mask = (f_bins >= fmin) & (f_bins <= fmax)
-    if invert:
-        mask = ~mask
-
-    return mask
-
-def spectral_skew(data):
-    mean = np.mean(data)
-    variance = np.mean((data - mean)**2)
-    skew_value = skew((data - mean) / np.sqrt(variance))
-    return skew_value
-
-def spectral_kurtosis(data):
-    mean = np.mean(data)
-    variance = np.mean((data - mean)**2)
-    kurtosis_value = np.mean((data - mean)**4 / (variance**2))
-    return kurtosis_value
-
-def spectral_entropy(S):
-    S_norm = S / np.sum(S, axis=0, keepdims=True)
-    entropy = -np.sum(S_norm * np.log2(S_norm + np.finfo(float).eps), axis=0)
-    return entropy
+def spectral_skew(y, sr, n_fft=2048, hop_length=512):
+    S, _ = librosa.core.stft(y, n_fft=n_fft, hop_length=hop_length)
+    S = librosa.util.normalize(S)
+    M2 = np.sum(S**2 * np.arange(S.shape[1]), axis=1)
+    M3 = np.sum(S**3 * (np.arange(S.shape[1]) - np.mean(np.arange(S.shape[1]))), axis=1)
+    spectral_skew = M3 / (np.sqrt(M2) ** 3)
+    return spectral_skew
 
 def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
-    # Load audio data
-    y, sr = librosa.load(sound_file, sr=None)
-
-    # Select specific portion if selec is not None
+    audio, sr = librosa.load(sound_file)
     if selec is not None:
-        y = y[int(sr * start) : int(sr * end)]
-
-    # Calculate spectrogram
-    S, P, n_fft, t, *rest = librosa.stft(y, n_fft=wl)
-
-    # Apply bandpass filter
-    fmin, fmax = bp
-    mask = freq_mask(P, sr, fmin, fmax, invert=True)
-    num_rows_S = S.shape[0]
-    S = S * mask[:, np.newaxis]
-    S=-S.astype(np.float32)
-    # Find negative values
-    negative_indices = np.where(S < 0)
-
-    # Option 1: Set negative values to small positive value (replace with desired approach)
-    S[negative_indices] = 1e-8
-    # Feature extraction
-    analysis = librosa.feature.spectral_centroid(S=S, sr=sr)
-    centroid = analysis.mean() / 1000
-    mean_freq = centroid 
-    sd = analysis.std() / 1000
-    median = np.median(analysis) / 1000
-    q25 = np.percentile(analysis, 25) / 1000
-    q75 = np.percentile(analysis, 75) / 1000
+        audio = audio[int(sr * start) : int(sr * end)]
+    stft = np.abs(librosa.stft(audio))
+    power_spec = librosa.amplitude_to_db(stft, ref=np.max)
+    frequencies = librosa.core.fft_frequencies(sr=sr)
+    mean_freq = np.sum(frequencies * power_spec.T) / np.sum(power_spec)
+    mean_freq = mean_freq / 1000  # Convert to kHz
+    frequencies = librosa.fft_frequencies(sr=sr, n_fft=spectrogram.shape[0])
+    frequency_sd = np.std(frequencies)
+    spectral_centroids = librosa.feature.spectral_centroid(audio, sr=sr)
+    median_frequency = librosa.hz_to_mel(librosa.median(spectral_centroids)) / 1000
+    mel_spec = librosa.feature.melspectrogram(y=audio, sr=sr)
+    mel_spec_db = librosa.power_to_db(mel_spec)
+    q25 = np.percentile(mel_spec_db, 25)
+    q75 = np.percentile(mel_spec_db, 75)
     iqr = q75 - q25
-    skew = spectral_skew(analysis)
-    kurt = spectral_kurtosis(analysis)
-    spectral_entropy = -np.log2(1 / centroid.size)
-    sfm = librosa.feature.spectral_flatness(S=S)
-    mode = librosa.feature.mfcc(S=S, sr=sr)[1].mean() / 1000
-
-    # Peak frequency
-    peak_freq = 0
-    # TODO: Implement peak frequency calculation using librosa functions
-
-    # Fundamental frequency parameters
-    f0 = librosa.feature.mfcc(y=y, sr=sr)
-    mean_f0 = np.mean(f0) if len(f0) else np.nan
-    min_f0 = np.min(f0) if len(f0) else np.nan
-    max_f0 = np.max(f0) if len(f0) else np.nan
-
-    # Dominant frequency parameters
-    dfreq = librosa.feature.delta(f0)
-    mean_dfreq = np.mean(dfreq, axis=1).mean()
-    min_dfreq = np.min(dfreq, axis=1).min()
-    max_dfreq = np.max(dfreq, axis=1).max()
-    df_range = max_dfreq - min_dfreq
-
-    # Duration
-    duration = end - start
-
-    # Modulation index
-    changes = []
-    for i in range(len(dfreq) - 1):
-        change = abs(dfreq[i] - dfreq[i + 1])
-        changes.append(change)
-    mod_index = np.mean(changes) / df_range if df_range else 0
-
-    # Combine features into dictionary
+    freqs = librosa.mel_frequencies(n_mels=mel_spec.shape[0], fmin=0, fmax=sr/2)
+    freqs_khz = freqs / 1000
+    q25_khz = np.interp(q25, mel_spec_db.min(), mel_spec_db.max(), freqs_khz.min(), freqs_khz.max())
+    q75_khz = np.interp(q75, mel_spec_db.min(), mel_spec_db.max(), freqs_khz.min(), freqs_khz.max())
+    iqr_khz = q75_khz - q25_khz
+    skew = spectral_skew(y, sr)
+    kurtosis_librosa = librosa.feature.spectral_contrast(audio)[0]
+    kurtosis_scipy = kurtosis(kurtosis_librosa)
+    stft_norm = stft / np.sum(stft)
+    entropy = -np.sum(stft_norm * np.log2(stft_norm))
+    gmean = librosa.geometric_mean(stft, axis=0)
+    amean = np.mean(stft, axis=0)
+    sfm = 10 * np.log10(gmean / amean)
+    freq_mode, count_mode = stats.mode(librosa.fft_frequencies(sr=sr, n_fft=wl))
+    peak_freq_bin_index = np.argmax(stft)
+    fft_freqs = librosa.fft_frequencies(sr)
+    peak_freq = fft_freqs[peak_freq_bin_index]
+    f0 = librosa.yin(audio, n_fft=wl, sr)
+    mean_f0 = np.mean(f0)
+    min_f0 = np.min(f0)
+    max_f0 = np.max(f0)
+    dominant_freq = librosa.feature.spectral_centroid(S=power_spec, sr=sr)
+    meandom = np.mean(dominant_freq)
+    mindom = np.min(dominant_freq)
+    maxdom = np.max(dominant_freq)
+    dfrange = np.ptp(dominant_freq)
+    delta_f0 = np.abs(np.diff(f0))
+    f0_range = np.max(f0) - np.min(f0)
+    modindx = np.sum(delta_f0) / f0_range
     features = {
         "duration": duration,
         "meanfreq": mean_freq,
@@ -124,8 +88,6 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     }
     print(features)
     return features
-
-
 
 def specan3(X, bp=(0, 22), wl=2048, threshold=5, parallel=1):
 
