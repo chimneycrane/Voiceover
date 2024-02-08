@@ -75,7 +75,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     # TODO: Implement peak frequency calculation using librosa functions
 
     # Fundamental frequency parameters
-    f0 = librosa.core.estimate_tuning(y=y, sr=sr, threshold=threshold)
+    f0 = librosa.feature.mfcc(y=y, sr=sr)
     mean_f0 = np.mean(f0) if len(f0) else np.nan
     min_f0 = np.min(f0) if len(f0) else np.nan
     max_f0 = np.max(f0) if len(f0) else np.nan
