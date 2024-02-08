@@ -76,9 +76,9 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
 
     # Fundamental frequency parameters
     f0 = librosa.core.estimate_tuning(y=y, sr=sr, threshold=threshold)
-    mean_f0 = np.mean(f0) if f0.size else np.nan
-    min_f0 = np.min(f0) if f0.size else np.nan
-    max_f0 = np.max(f0) if f0.size else np.nan
+    mean_f0 = np.mean(f0) if len(f0) else np.nan
+    min_f0 = np.min(f0) if len(f0) else np.nan
+    max_f0 = np.max(f0) if len(f0) else np.nan
 
     # Dominant frequency parameters
     dfreq = librosa.feature.delta_mfcc(
