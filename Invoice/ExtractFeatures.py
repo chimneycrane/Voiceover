@@ -50,7 +50,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     peak_freq_bin_index = np.argmax(stft)
     fft_freqs = librosa.fft_frequencies(sr)
     peak_freq = fft_freqs[peak_freq_bin_index]
-    f0 = librosa.yin(audio, n_fft=wl, sr)
+    f0 = librosa.yin(y=audio, sr=sr)
     mean_f0 = np.mean(f0)
     min_f0 = np.min(f0)
     max_f0 = np.max(f0)
@@ -65,26 +65,26 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     features = {
         "duration": duration,
         "meanfreq": mean_freq,
-        "sd": sd,
-        "median": median,
-        "Q25": q25,
-        "Q75": q75,
-        "IQR": iqr,
+        "sd": frequency_sd,
+        "median": median_frequency,
+        "Q25": q25_khz,
+        "Q75": q75_khz,
+        "IQR": iqr_khz,
         "skew": skew,
-        "kurt": kurt,
-        "sp.ent":spectral_entropy,
+        "kurt": kurtosis_scipy,
+        "sp.ent":entropy,
         "sfm":sfm,
-        "mode": mode,
-        "centroid":centroid,
+        "mode": freq_mode[0],
+        "centroid":mean_freq,
         "peakf":peak_freq,
         "meanfun":mean_f0,
         "minfun":min_f0,
         "maxfun":max_f0,
-        "meandom":mean_dfreq,
-        "mindom":min_dfreq,
-        "maxdom":max_dfreq,
-        "dfrange":df_range,
-        "modindx":mod_index
+        "meandom":meandom,
+        "mindom":mindom,
+        "maxdom":maxdom,
+        "dfrange":dfrange,
+        "modindx":modindx
     }
     print(features)
     return features
