@@ -6,8 +6,10 @@ import pandas as pd
 from scipy.stats import skew
 import math 
 from scipy.stats import kurtosis
+from scipy.interpolate import interp1d
 
-def spectral_skew(y, sr, n_fft=2048, hop_length=512):
+def spectral_skew(y, sr, n_fft=2048, hop_length=512):  
+    interp_funcs = [interp1d(mel_spec_db[:, i], freqs_khz[:, i]) for i in range(mel_spec_db.shape[1])]
     S, _ = librosa.core.stft(y, n_fft=n_fft, hop_length=hop_length)
     S = librosa.util.normalize(S)
     M2 = np.sum(S**2 * np.arange(S.shape[1]), axis=1)
@@ -35,8 +37,8 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     iqr = q75 - q25
     freqs = librosa.mel_frequencies(n_mels=mel_spec.shape[0], fmin=0, fmax=sr/2)
     freqs_khz = freqs / 1000
-    q25_khz = np.interp(q25, mel_spec_db.min(), mel_spec_db.max(), freqs_khz.min(),    freqs_khz.max(), axis=1)
-    q75_khz = np.interp(q75, mel_spec_db.min(), mel_spec_db.max(), freqs_khz.min(),     freqs_khz.max(), axis=1)
+    q25_khz = np.array([interp_func(q25) for interp_func in interp_funcs]).T
+    q75_khz = np.array([interp_func(q75) for interp_func in interp_funcs]).T
     iqr_khz = q75_khz - q25_khz
     skew = spectral_skew(y, sr)
     kurtosis_librosa = librosa.feature.spectral_contrast(audio)[0]
