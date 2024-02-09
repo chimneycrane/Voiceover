@@ -35,9 +35,9 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     iqr = q75 - q25
     freqs = librosa.mel_frequencies(n_mels=mel_spec.shape[0], fmin=0, fmax=sr/2)
     freqs_khz = freqs / 1000
-    q25_khz = np.interp(q25, mel_spec_db.min(), mel_spec_db.max(), freqs_khz.min(), freqs_khz.max())
-    q75_khz = np.interp(q75, mel_spec_db.min(), mel_spec_db.max(), freqs_khz.min(), freqs_khz.max())
-    iqr_khz = q75_khz - q25_khz
+    q25_khz = np.interp(q25, mel_spec_db.min(), mel_spec_db.max(), freqs_khz.min(), freqs_khz.max(), axis=1)
+q75_khz = np.interp(q75, mel_spec_db.min(), mel_spec_db.max(), freqs_khz.min(), freqs_khz.max(), axis=1)
+iqr_khz = q75_khz - q25_khz
     skew = spectral_skew(y, sr)
     kurtosis_librosa = librosa.feature.spectral_contrast(audio)[0]
     kurtosis_scipy = kurtosis(kurtosis_librosa)
