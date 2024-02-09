@@ -26,7 +26,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     mean_freq = mean_freq / 1000  # Convert to kHz
     frequencies = librosa.fft_frequencies(sr=sr, n_fft=wl)
     frequency_sd = np.std(frequencies)
-    spectral_centroids = librosa.feature.spectral_centroid(S=audio, sr=sr)
+    spectral_centroids = librosa.feature.spectral_centroid(y=audio, sr=sr)
     median_frequency = librosa.hz_to_mel(librosa.median(spectral_centroids)) / 1000
     mel_spec = librosa.feature.melspectrogram(y=audio, sr=sr)
     mel_spec_db = librosa.power_to_db(mel_spec)
@@ -54,7 +54,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     mean_f0 = np.mean(f0)
     min_f0 = np.min(f0)
     max_f0 = np.max(f0)
-    dominant_freq = librosa.feature.spectral_centroid(S=power_spec, sr=sr)
+    dominant_freq = librosa.feature.spectral_centroid(y=power_spec, sr=sr)
     meandom = np.mean(dominant_freq)
     mindom = np.min(dominant_freq)
     maxdom = np.max(dominant_freq)
