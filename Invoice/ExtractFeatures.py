@@ -9,7 +9,6 @@ from scipy.stats import kurtosis
 from scipy.interpolate import interp1d
 
 def spectral_skew(y, sr, n_fft=2048, hop_length=512):  
-    interp_funcs = [interp1d(mel_spec_db[:, i], freqs_khz[:, i]) for i in range(mel_spec_db.shape[1])]
     S, _ = librosa.core.stft(y, n_fft=n_fft, hop_length=hop_length)
     S = librosa.util.normalize(S)
     M2 = np.sum(S**2 * np.arange(S.shape[1]), axis=1)
@@ -18,6 +17,7 @@ def spectral_skew(y, sr, n_fft=2048, hop_length=512):
     return spectral_skew
 
 def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
+    interp_funcs = [interp1d(mel_spec_db[:, i], freqs_khz[:, i]) for i in range(mel_spec_db.shape[1])]
     audio, sr = librosa.load(sound_file)
     if selec is not None:
         audio = audio[int(sr * start) : int(sr * end)]
