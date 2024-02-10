@@ -40,7 +40,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     q75_khz = np.percentile(mel_spec_db_khz, 75)
     iqr_khz = q75_khz - q25_khz
 
-    skew = spectral_skew(y, sr)
+    skew = spectral_skew(audio, sr)
     kurtosis_librosa = librosa.feature.spectral_contrast(audio)[0]
     kurtosis_scipy = kurtosis(kurtosis_librosa)
     stft_norm = stft / np.sum(stft)
