@@ -31,19 +31,15 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     median_frequency = librosa.hz_to_mel(np.median(spectral_centroids)) / 1000
     mel_spec = librosa.feature.melspectrogram(y=audio, sr=sr)
     mel_spec_db = librosa.power_to_db(mel_spec)
-    freqs = librosa.mel_frequencies(n_mels=mel_spec.shape[0], fmin=0, fmax=sr/2)
-    freqs_khz = freqs / 1000
-    if freqs_khz.ndim == 1:  # Check if it's now 1D
-        freqs_khz = freqs_khz.reshape(-1, 1)  # Reshape to 2D
-    print(freqs_khz)
-    print(mel_spec_db)
-    interp_funcs = [interp1d(mel_spec_db[:, i], freqs_khz[i]) for i in range(mel_spec_db.shape[1])]
+    mel_spec_db_khz = mel_spec_db / 1000
+    
     q25 = np.percentile(mel_spec_db, 25)
     q75 = np.percentile(mel_spec_db, 75)
     iqr = q75 - q25
-    q25_khz = np.array([interp_func(q25) for interp_func in interp_funcs]).T
-    q75_khz = np.array([interp_func(q75) for interp_func in interp_funcs]).T
+    q25_khz = np.percentile(mel_spec_db_khz, 25)
+    q75_khz = np.percentile(mel_spec_db_khz, 75)
     iqr_khz = q75_khz - q25_khz
+
     skew = spectral_skew(y, sr)
     kurtosis_librosa = librosa.feature.spectral_contrast(audio)[0]
     kurtosis_scipy = kurtosis(kurtosis_librosa)
