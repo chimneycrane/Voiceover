@@ -17,7 +17,6 @@ def spectral_skew(y, sr, n_fft=2048, hop_length=512):
     return spectral_skew
 
 def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
-    interp_funcs = [interp1d(mel_spec_db[:, i], freqs_khz[:, i]) for i in range(mel_spec_db.shape[1])]
     audio, sr = librosa.load(sound_file)
     if selec is not None:
         audio = audio[int(sr * start) : int(sr * end)]
@@ -32,6 +31,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     median_frequency = librosa.hz_to_mel(np.median(spectral_centroids)) / 1000
     mel_spec = librosa.feature.melspectrogram(y=audio, sr=sr)
     mel_spec_db = librosa.power_to_db(mel_spec)
+    interp_funcs = [interp1d(mel_spec_db[:, i], freqs_khz[:, i]) for i in range(mel_spec_db.shape[1])]
     q25 = np.percentile(mel_spec_db, 25)
     q75 = np.percentile(mel_spec_db, 75)
     iqr = q75 - q25
