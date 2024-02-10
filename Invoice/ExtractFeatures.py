@@ -37,7 +37,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
         freqs_khz = freqs_khz.reshape(-1, 1)  # Reshape to 2D
     print(freqs_khz)
     print(mel_spec_db)
-    interp_funcs = [interp1d(mel_spec_db[:, i], freqs_khz[:, i]) for i in range(mel_spec_db.shape[1])]
+    interp_funcs = [interp1d(mel_spec_db[:, i], freqs_khz[i]) for i in range(mel_spec_db.shape[1])]
     q25 = np.percentile(mel_spec_db, 25)
     q75 = np.percentile(mel_spec_db, 75)
     iqr = q75 - q25
