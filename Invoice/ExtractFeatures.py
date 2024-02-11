@@ -9,7 +9,7 @@ from scipy.stats import kurtosis
 from scipy.interpolate import interp1d
 
 def spectral_skew(y, sr, n_fft=2048, hop_length=512):  
-    S, *_ = librosa.core.stft(y, n_fft=n_fft, hop_length=hop_length)
+    S, rest* = librosa.core.stft(y, n_fft=n_fft, hop_length=hop_length)
     S = librosa.util.normalize(S)
     M2 = np.sum(S**2 * np.arange(S.shape[1]), axis=1)
     M3 = np.sum(S**3 * (np.arange(S.shape[1]) - np.mean(np.arange(S.shape[1]))), axis=1)
