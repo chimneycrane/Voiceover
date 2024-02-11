@@ -11,8 +11,9 @@ from scipy.interpolate import interp1d
 def spectral_skew(y, sr, n_fft=2048, hop_length=512):  
     S, *rest = librosa.core.stft(y, n_fft=n_fft, hop_length=hop_length)
     S = librosa.util.normalize(S)
-    M2 = np.sum(S**2 * np.arange(S.shape[0]), axis=1)
-    M3 = np.sum(S**3 * (np.arange(S.shape[0]) - np.mean(np.arange(S.shape[0]))), axis=1)
+    print(S.shape)
+    M2 = np.sum(S**2 * np.arange(S.shape[0]))
+    M3 = np.sum(S**3 * (np.arange(S.shape[0]) - np.mean(np.arange(S.shape[0]))))
     spectral_skew = M3 / (np.sqrt(M2) ** 3)
     return spectral_skew
 
