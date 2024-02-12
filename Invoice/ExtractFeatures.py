@@ -42,8 +42,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     iqr_khz = q75_khz - q25_khz
 
     skew = spectral_skew(audio, sr)
-    kurtosis_librosa = librosa.feature.spectral_contrast(mel_spec)[0]
-    kurtosis_scipy = kurtosis(kurtosis_librosa)
+    kurtosis_scipy = scipy.stats.kurtosis(audio)
     stft_norm = stft / np.sum(stft)
     entropy = -np.sum(stft_norm * np.log2(stft_norm))
     gmean = librosa.geometric_mean(stft, axis=0)
