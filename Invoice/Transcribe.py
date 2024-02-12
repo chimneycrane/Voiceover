@@ -141,10 +141,8 @@ class Transcriber:
             speaker_aud.export(speaker_path, format="wav")
             referense_segment.export(self.wd+f'/{i}.wav', format="wav")
             
-            if end-start<6:#short segments dont give good speaker referance
-                rec.append(speaker_path)
-            else:
-                rec.append(self.wd+f'/{i}.wav')
+            rec.append(speaker_path)
+            rec.append(self.wd+f'/{i}.wav')
             i+=1
             
         with open(self.wd+'/transcript.pickle', 'wb') as file:
