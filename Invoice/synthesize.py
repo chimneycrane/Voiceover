@@ -43,15 +43,15 @@ class Synthesis():
         for record in self.transcript:
             if record[3]!='':
                 if record[6]==1:
-                self.tts.tts_to_file(text=record[3].replace(';','.').replace('.',' .'),
-                        file_path=self.wd+f'/{i}.wav',
+                    self.tts.tts_to_file(text=record[3].replace(';','.').replace('.',' .'),
+                        file_path=record[5]',
                         speaker_wav=record[4], temperature=0.7,
                         language=self.accent)
-                output = AudioSegment.from_file(self.wd+f'/{i}.wav')
+                output = AudioSegment.from_file(record[5])
                 len_ratio = output.duration_seconds/(record[1]-record[0])
-                if len_ratio>1:
+                if len_ratio>1 and record[6]==1:
                     output = self._squeeze_audio(self.wd+f'/{i}.wav',record[0],record[1])
-                self.transcript[i].append(self.wd+f'/{i}.wav')
+                self.transcript[i].append(record[5])
             i+=1
         self.Glue(self.wd+'/result.wav')
 
