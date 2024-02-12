@@ -3,6 +3,7 @@ import librosa
 import librosa.display
 import numpy as np
 import pandas as pd
+import scipy
 from scipy.stats import *
 import math 
 from scipy.stats import kurtosis
