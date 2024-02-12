@@ -46,7 +46,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     kurtosis_scipy = scipy.stats.kurtosis(audio)
     stft_norm = stft / np.sum(stft)
     entropy = -np.sum(stft_norm * np.log2(stft_norm))
-    gmean = librosa.geometric_mean(stft, axis=0)
+    gmean = np.exp(np.mean(np.log(stft), axis=0))
     amean = np.mean(stft, axis=0)
     sfm = 10 * np.log10(gmean / amean)
     freq_mode, count_mode = stats.mode(librosa.fft_frequencies(sr=sr, n_fft=wl))
