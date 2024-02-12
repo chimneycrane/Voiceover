@@ -3,7 +3,7 @@ import librosa
 import librosa.display
 import numpy as np
 import pandas as pd
-from scipy.stats import skew
+from scipy.stats import *
 import math 
 from scipy.stats import kurtosis
 from scipy.interpolate import interp1d
