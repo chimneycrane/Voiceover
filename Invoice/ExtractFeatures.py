@@ -50,7 +50,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     sfm = 10 * np.log10(gmean / amean)
     freq_mode, count_mode = stats.mode(librosa.fft_frequencies(sr=sr, n_fft=wl))
     peak_freq_bin_index = np.argmax(stft)
-    fft_freqs = librosa.fft_frequencies(sr, n_fft=wl)
+    fft_freqs = librosa.fft_frequencies(sr=sr, n_fft=wl)
     peak_freq = fft_freqs[peak_freq_bin_index]
     f0 = librosa.yin(y=audio, sr=sr)
     mean_f0 = np.mean(f0)
