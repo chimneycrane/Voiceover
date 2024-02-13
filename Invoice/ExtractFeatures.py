@@ -122,7 +122,7 @@ def specan3(X, bp=(0, 22), wl=2048, threshold=5, parallel=1):
         _feature_extraction(f, s, e, sl, bp, wl, threshold)
         for f, s, e, sl in zip(sound_files, start, end, selec)
     ]
-
+    print(features)
     # Combine features into data frame and rename columns
     df = pd.DataFrame(features).transpose()
     df.columns = ["sound.files", "selec"] + features[0].keys()
