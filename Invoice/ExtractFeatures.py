@@ -47,7 +47,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     entropy = -np.sum(stft_norm * np.log2(stft_norm))
     gmean = np.exp(np.mean(np.log(stft), axis=0))
     amean = np.mean(stft, axis=0)
-    sfm = 10 * np.log10(gmean / amean)
+    sfm = librosa.feature.spectral_flatness(S=S)[0]
     freq_mode, count_mode = stats.mode(librosa.fft_frequencies(sr=sr, n_fft=wl))
     fft_freqs = librosa.fft_frequencies(sr=sr, n_fft=wl)
     peak_freq = 0
