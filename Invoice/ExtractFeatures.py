@@ -41,7 +41,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     q75_khz = np.abs(np.percentile(mel_spec_db_khz, 75))
     iqr_khz = q75_khz - q25_khz
 
-    skew = stats.skew(S, bias=True)
+    skew = stats.skew(audio, bias=True)
     kurtosis_scipy = scipy.stats.kurtosis(audio)
     stft_norm = stft / np.sum(stft)
     entropy = -np.sum(stft_norm * np.log2(stft_norm))
