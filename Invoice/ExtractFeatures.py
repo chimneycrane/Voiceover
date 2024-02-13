@@ -65,7 +65,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     modindx = np.sum(delta_f0) / f0_range
     features = {
         "meanfreq": mean_freq/100,
-        "sd": frequency_sd,
+        "sd": frequency_sd/100000,
         "median": median_frequency,
         "Q25": q25_khz,
         "Q75": q75_khz,
