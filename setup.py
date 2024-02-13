@@ -22,7 +22,8 @@ setup(
         'https://download.pytorch.org/whl/cu121'  # Specify the index URL
     ],
     install_requires=[
-        'typer'
+        'langdetect'
+       ,'typer'
        ,'rpy2==3.5.15'
        ,'pandas'
        ,'scipy'
