@@ -51,7 +51,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     freq_mode, count_mode = stats.mode(librosa.fft_frequencies(sr=sr, n_fft=wl))
     fft_freqs = librosa.fft_frequencies(sr=sr, n_fft=wl)
     peak_freq = 0
-   f0 = librosa.yin(y=audio, sr=sr, fmin=20, fmax=22400)
+    f0 = librosa.yin(y=audio, sr=sr, fmin=20, fmax=22400)
     mean_f0 = np.mean(f0)
     min_f0 = np.min(f0)
     max_f0 = np.max(f0)
