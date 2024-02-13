@@ -74,7 +74,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
         "kurt": kurtosis_scipy,
         "sp.ent":entropy,
         "sfm":sfm,
-        "mode": freq_mode[0],
+        "mode": freq_mode,
         "centroid":mean_freq,
         "peakf":peak_freq,
         "meanfun":mean_f0,
