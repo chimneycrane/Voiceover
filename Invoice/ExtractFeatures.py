@@ -64,7 +64,6 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     f0_range = np.max(f0) - np.min(f0)
     modindx = np.sum(delta_f0) / f0_range
     features = {
-        "duration": duration,
         "meanfreq": mean_freq,
         "sd": frequency_sd,
         "median": median_frequency,
