@@ -25,7 +25,7 @@ def calculate_sfm_scipy(signal):
 
   # Calculate and return skew (sfm)
   sfm = moment / (np.std(absolute_spectrum) ** 3)
-  return sfm
+  return np.mean(sfm)
   
 def spectral_skew(y, sr, n_fft=2048, hop_length=512):  
     S, *rest = librosa.core.stft(y, n_fft=n_fft, hop_length=hop_length)
