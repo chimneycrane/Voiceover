@@ -9,6 +9,28 @@ import math
 from scipy.stats import kurtosis
 from scipy.interpolate import interp1d
 
+def calculate_sfm_scipy(signal):
+  if not isinstance(signal, np.ndarray) or signal.ndim != 1:
+    raise ValueError("Input signal must be a 1D NumPy array.")
+
+  # Absolute value to handle both positive and negative frequencies
+  absolute_spectrum = np.abs(signal)
+
+  # Handle potential division by zero (small std)
+  if np.std(absolute_spectrum) < 1e-8:
+    return 0.0  # Return 0 for near-constant signals
+
+  # Calculate moment about the mean
+  moment = np.mean((absolute_spectrum - np.mean(absolute_spectrum)) ** 3)
+
+  # Calculate and return skew (sfm)
+  sfm = moment / (np.std(absolute_spectrum) ** 3)
+  return sfm
+
+# Example usage (load audio with librosa for demonstration)
+y, sr = librosa.load('your_audio_file.wav')
+signal = y[::100]  # Downsample for efficiency (optional)
+  
 def spectral_skew(y, sr, n_fft=2048, hop_length=512):  
     S, *rest = librosa.core.stft(y, n_fft=n_fft, hop_length=hop_length)
     S = librosa.util.normalize(S)
