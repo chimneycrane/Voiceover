@@ -141,11 +141,11 @@ def specan3(X, bp=(0, 22), wl=2048, threshold=5, parallel=1):
     ]
     # Combine features into data frame and rename columns
     df = pd.DataFrame(features).transpose()  
-    key_list = ["sound.files", "selec"]+ list(features[0].keys())
-    print(key_list)
-    df.columns = key_list
-    print(df.columns)
-    df.set_index("selec", inplace=True)
+    #key_list = ["sound.files", "selec"]+ list(features[0].keys())
+    #print(key_list)
+    #df.columns = key_list
+    #print(df.columns)
+    #df.set_index("selec", inplace=True)
     df.index.names = ["selection"]
 
     return df
