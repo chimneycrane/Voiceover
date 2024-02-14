@@ -87,13 +87,13 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
         "median": median_frequency,
         "Q25": q25_khz,
         "Q75": q75_khz,
-        "IQR": iqr_khz,
-        "skew": skew,
+        "IQR": np.abs(iqr_khz),
+        "skew": np.abs(skew),
         "kurt": kurtosis_scipy,
         "sp.ent":entropy,
         "sfm":sfm,
         "mode": freq_mode,
-        "centroid":mean_freq,
+        "centroid":mean_freq/100,
         "peakf":peak_freq,
         "meanfun":mean_f0,
         "minfun":min_f0,
@@ -101,8 +101,8 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
         "meandom":meandom,
         "mindom":mindom,
         "maxdom":maxdom,
-        "dfrange":dfrange,
-        "modindx":modindx
+        "dfrange":dfrange/100,
+        "modindx":modindx/10
     }
     print(features)
     return features
