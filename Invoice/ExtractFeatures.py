@@ -26,10 +26,6 @@ def calculate_sfm_scipy(signal):
   # Calculate and return skew (sfm)
   sfm = moment / (np.std(absolute_spectrum) ** 3)
   return sfm
-
-# Example usage (load audio with librosa for demonstration)
-y, sr = librosa.load('your_audio_file.wav')
-signal = y[::100]  # Downsample for efficiency (optional)
   
 def spectral_skew(y, sr, n_fft=2048, hop_length=512):  
     S, *rest = librosa.core.stft(y, n_fft=n_fft, hop_length=hop_length)
@@ -69,7 +65,7 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
     entropy = -np.sum(stft_norm * np.log2(stft_norm))
     gmean = np.exp(np.mean(np.log(stft), axis=0))
     amean = np.mean(stft, axis=0)
-    sfm = librosa.feature.spectral_flatness(S=stft)[0]
+    sfm = calculate_sfm_scipy(audio)
     freq_mode, count_mode = stats.mode(librosa.fft_frequencies(sr=sr, n_fft=wl))
     fft_freqs = librosa.fft_frequencies(sr=sr, n_fft=wl)
     peak_freq = 0
