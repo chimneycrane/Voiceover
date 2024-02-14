@@ -104,7 +104,6 @@ def _feature_extraction(sound_file, start, end, selec, bp, wl, threshold):
         "dfrange":dfrange/100,
         "modindx":modindx/10
     }
-    print(features)
     return features
 
 def specan3(X, bp=(0, 22), wl=2048, threshold=5, parallel=1):
@@ -140,12 +139,13 @@ def specan3(X, bp=(0, 22), wl=2048, threshold=5, parallel=1):
         _feature_extraction(f, s, e, sl, bp, wl, threshold)
         for f, s, e, sl in zip(sound_files, start, end, selec)
     ]
-    print(features)
     # Combine features into data frame and rename columns
     df = pd.DataFrame(features).transpose()
     print(features[0].keys())   
     key_list = [key for key in features[0].keys()]
-    df.columns = ["sound.files", "selec"]+key_list df.set_index("selec",inplace=True)
+    df.columns = ["sound.files", "selec"]+key_list
+    print(df.columns)
+    df.set_index("selec",inplace=True)
     df.index.names = ["selection"]
 
     return df
