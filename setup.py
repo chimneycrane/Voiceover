@@ -31,7 +31,6 @@ setup(
        ,'scikit-learn'
        ,'numpy==1.22.0'
        ,'openai-whisper==20231117'
-       ,'TTS'
        ,'torch==2.1.1'
        ,'torchaudio==2.1.1'
        ,'torchvision==0.16.1'
