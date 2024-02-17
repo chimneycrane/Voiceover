@@ -61,8 +61,9 @@ class Transcriber:
     
             #remove empty text, correct grammar
             i=0
-            while i < len(transcription)-1:
+            while i < len(transcription):
                 text = transcription[i][3].strip()
+                print(text)
                 if text=='':
                     transcription.pop(i)
                     i-=1
@@ -71,7 +72,7 @@ class Transcriber:
             #calculate 80 percentile pauses length
             i=0
             pauses = []
-            while i < len(transcription)-2:
+            while i < len(transcription)-1:
                 pause = transcription[i+1][0] - transcription[i][1]
                 if pause>0.0:
                     pauses.append(transcription[i+1][0] - transcription[i][1])
@@ -107,6 +108,7 @@ class Transcriber:
             while i < len(transcription)-1:
                 text = transcription[i][3].strip()
                 transcription[i][3] = tool.correct(text)
+                print(transcription[i][3])
                 i+=1
             
             self.diary = transcription
