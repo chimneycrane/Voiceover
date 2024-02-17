@@ -49,8 +49,8 @@ class Synthesis():
                         language=self.accent)
                 output = AudioSegment.from_file(record[5])
                 len_ratio = output.duration_seconds/(record[1]-record[0])
-                if len_ratio>1 and record[6]==1:
-                    output = self._squeeze_audio(self.wd+f'/{i}.wav',record[0],record[1])
+                #if len_ratio>1 and record[6]==1:
+                #    output = self._squeeze_audio(self.wd+f'/{i}.wav',record[0],record[1])
                 self.transcript[i].append(record[5])
             i+=1
         self.Glue(self.wd+'/result.wav')
