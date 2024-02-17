@@ -121,7 +121,7 @@ class Transcriber:
         )
         transcript['segments'][0]['start']=self.diary[0][0]
         transcript['segments'][0]['end']=self.diary[0][1]
-        
+        print(transcript)
         self._FitTranscript(transcript['segments'])
         audio = AudioSegment.from_file(self.audio_path)
         
