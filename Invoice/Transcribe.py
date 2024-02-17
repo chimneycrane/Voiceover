@@ -77,7 +77,7 @@ class Transcriber:
                     pauses.append(transcription[i+1][0] - transcription[i][1])
                 i+=1            
             npauses= np.array(pauses)
-            threshold = np.percentile(npauses, 80)
+            threshold = np.percentile(npauses, 80)if len(npausrs) else 0            
             npauses = npauses[npauses <= threshold]
             avg_pause = npauses.mean()
             #stich sentense
