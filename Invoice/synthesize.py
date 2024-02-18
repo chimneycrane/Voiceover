@@ -24,13 +24,13 @@ class Synthesis():
         length_ms = audio.duration_seconds
         desired_length = end_time-start_time
         speed_factor = desired_length/length_ms
-        stretch_audio(audio_path, audio_path, ratio=speed_factor)
+        stretch_audio(audio_path, audio_path.replace('.wav','r.wav'), ratio=speed_factor)
         
     def Glue(self, result_path):
         output = AudioSegment.from_file(self.background)
         for record in self.transcript:
             if record[3]!='':
-                audio = AudioSegment.from_file(record[5].replace('.wav','r.wav'))
+                audio = AudioSegment.from_file(record[5])
                 resampled_audio = audio.set_frame_rate(output.frame_rate)
                 output = output.overlay(audio, position=int(record[0]*1000))
         output.export(result_path, format='wav')                
@@ -45,7 +45,8 @@ class Synthesis():
                         speaker_wav=record[4], temperature=0.7,
                         language=self.accent)
                 if record[6]==1:
-                    output = self._squeeze_audio(record[5].replace('.wav','r.wav'),record[0],record[1])
+                    output = self._squeeze_audio(record[5],record[0],record[1])
+                    record[5]= record[5].replace('.wav','r.wav')
             i+=1
         self.Glue(self.wd+'/result.wav')
 
