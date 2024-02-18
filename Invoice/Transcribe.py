@@ -61,9 +61,8 @@ class Transcriber:
     
             #remove empty text, correct grammar
             i=0
-            while i < len(transcription):
+            while i < len(transcription)-1:
                 text = transcription[i][3].strip()
-                print(text)
                 if text=='':
                     transcription.pop(i)
                     i-=1
