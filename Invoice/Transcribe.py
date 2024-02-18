@@ -107,7 +107,7 @@ class Transcriber:
             while i < len(transcription)-1:
                 text = transcription[i][3].strip()
                 transcription[i][3] = tool.correct(text)
-                print(transcription[i][3])
+                print(transcription[i][2],transcription[i][0],transcription[i][1],transcription[i][3])
                 i+=1
             
             self.diary = transcription
