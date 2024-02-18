@@ -2,7 +2,7 @@ from setuptools import setup, Command, find_packages
 
 def run():
     import subprocess
-    subprocess.call(['pip', 'install', 'protobuf==3.20.0','--force-install'])
+    subprocess.call(['pip', 'install', 'protobuf==3.19.0','--force-install'])
       
 setup(
     name='Invoice',  # Replace with your desired package name
@@ -51,7 +51,7 @@ setup(
        ,'ipython==7.34.0'
        ,'ffmpeg-python==0.2.0'
        ,'language-tool-python==2.7.1'
-       ,'protobuf==3.20.0'
+       ,'protobuf==3.19.0'
        ,'librosa'
     ],
     cmdclass={
