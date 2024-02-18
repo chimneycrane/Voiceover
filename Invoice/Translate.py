@@ -12,7 +12,7 @@ def replace_numbers_with_words(text):
     new_words = []
     for word in words:
         if word.isdigit():
-            new_words.append(num2words.num2words(int(word)))
+            new_words.append(num2words(int(word)))
         else:
             new_words.append(word)
     return " ".join(new_words)
