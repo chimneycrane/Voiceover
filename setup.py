@@ -23,6 +23,7 @@ setup(
     ],
     install_requires=[
         'langdetect'
+       ,'num2words'
        ,'typer'
        ,'rpy2==3.5.15'
        ,'pandas'
