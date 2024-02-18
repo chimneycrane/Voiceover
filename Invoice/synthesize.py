@@ -45,7 +45,7 @@ class Synthesis():
                 if record[6]==1:
                     self.tts.tts_to_file(text=record[3].replace(';','.').replace('.',' .'),
                         file_path=record[5],
-                        speaker_wav=record[5], temperature=0.7,
+                        speaker_wav=record[4], temperature=0.7,
                         language=self.accent)
                 output = AudioSegment.from_file(record[5])
                 len_ratio = output.duration_seconds/(record[1]-record[0])
