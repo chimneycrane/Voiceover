@@ -3,7 +3,7 @@ import torch
 import pickle
 from TTS.api import TTS
 from pydub import AudioSegment
-import soundstretch
+from audiostretchy.stretch import stretch_audio
 
 class Synthesis():
     def __init__(self, work_dir, accent, background):
@@ -24,10 +24,7 @@ class Synthesis():
         length_ms = audio.duration_seconds
         desired_length = end_time-start_time
         speed_factor = desired_length/length_ms
-        stretch = soundstretch.SoundStretch(audio_path, audio_path, speed_factor)
-        audio = AudioSegment.from_file(audio_path)
-        first_n_seconds = audio[:desired_length * 1000]
-        first_n_seconds.export(audio_path, format="wav")
+        stretch_audio(audio_path, audio_path, ratio=speed_factor)
         
     def Glue(self, result_path):
         output = AudioSegment.from_file(self.background)
