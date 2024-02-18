@@ -30,7 +30,7 @@ class Synthesis():
         output = AudioSegment.from_file(self.background)
         for record in self.transcript:
             if record[3]!='':
-                audio = AudioSegment.from_file(record[5])
+                audio = AudioSegment.from_file(record[5].replace('.wav','r.wav'))
                 resampled_audio = audio.set_frame_rate(output.frame_rate)
                 output = output.overlay(audio, position=int(record[0]*1000))
         output.export(result_path, format='wav')                
@@ -44,11 +44,8 @@ class Synthesis():
                         file_path=record[5],
                         speaker_wav=record[4], temperature=0.7,
                         language=self.accent)
-                output = AudioSegment.from_file(record[5])
-                len_ratio = output.duration_seconds/(record[1]-record[0])
-                if len_ratio>1 and record[6]==1:
-                    output = self._squeeze_audio(self.wd+f'/{i}.wav',record[0],record[1])
-                self.transcript[i].append(record[5])
+                if record[6]==1:
+                    output = self._squeeze_audio(record[5].replace('.wav','r.wav'),record[0],record[1])
             i+=1
         self.Glue(self.wd+'/result.wav')
 
