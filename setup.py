@@ -22,8 +22,7 @@ setup(
         'https://download.pytorch.org/whl/cu121'  # Specify the index URL
     ],
     install_requires=[
-        'langdetect'
-       ,'audiostretchy'
+        'langdetect
        ,'num2words'
        ,'typer'
        ,'rpy2==3.5.15'
@@ -53,6 +52,7 @@ setup(
        ,'language-tool-python==2.7.1'
        ,'protobuf==3.20.0'
        ,'librosa'
+       ,'audiostretchy'
     ],
     cmdclass={
         'custom_install': run,
