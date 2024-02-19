@@ -118,10 +118,7 @@ class Transcriber:
         transcript = model.transcribe(
             word_timestamps=True,
             audio=self.audio_path
-        )
-        transcript['segments'][0]['start']=self.diary[0][0]
-        transcript['segments'][0]['end']=self.diary[0][1]
-        self._FitTranscript(transcript['segments'])
+        )     self._FitTranscript(transcript['segments'])
         audio = AudioSegment.from_file(self.audio_path)
         
         for rec in self.diary:
