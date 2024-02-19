@@ -119,7 +119,7 @@ class Transcriber:
             word_timestamps=True,
             audio=self.audio_path
         )
-         self._FitTranscript(transcript['segments'])
+        self._FitTranscript(transcript['segments'])
         audio = AudioSegment.from_file(self.audio_path)
         
         for rec in self.diary:
