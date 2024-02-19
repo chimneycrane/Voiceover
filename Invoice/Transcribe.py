@@ -50,7 +50,7 @@ class Transcriber:
                 if speaker == '':
                     speaker=last_speaker
                 if len(chunk['text'])>0 and speaker!='':
-                    transcription.append([speaker[0],speaker[1],speaker[2],chunk['text']]) 
+                    transcription.append([chunk['start'],chunk['end'],speaker[2],chunk['text']]) 
                     words[speaker[2]]+=len(chunk['text'])
                     seconds[speaker[2]] += speaker[1]-speaker[0]
                 last_speaer = speaker
