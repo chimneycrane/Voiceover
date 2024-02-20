@@ -131,7 +131,6 @@ class Transcriber:
             end = rec[1]
             text = rec[3]
             speaker = rec[2]
-            print(text)
             #rec[3] = GoogleTranslator(source=self.src_lang, target=self.dst_lang).translate(text)
             #save audio reference for every speaker
             referense_segment = audio[int(start*1000):int(end*1000)]
