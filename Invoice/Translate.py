@@ -38,7 +38,6 @@ for rec in diary:
         rec.append(1)
     else:
         rec.append(0)
-    print(rec[3])
 
 with open(sys.argv[1]+'/transcript.pickle', 'wb') as file:
     pickle.dump(diary, file, protocol=pickle.HIGHEST_PROTOCOL)
