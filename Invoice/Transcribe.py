@@ -64,7 +64,7 @@ class Transcriber:
             i=0
             while i < len(transcription)-1:
                 text = transcription[i][3].strip()
-                if text=='':
+                if text.isspace():
                     transcription.pop(i)
                     i-=1
                 i+=1
@@ -110,7 +110,13 @@ class Transcriber:
                 transcription[i][3] = tool.correct(text)
                 print(transcription[i][2],transcription[i][0],transcription[i][1],transcription[i][3])
                 i+=1
-            
+i=0
+            while i < len(transcription)-1:
+                text = transcription[i][3].strip()
+                if text.isspace():
+                    transcription.pop(i)
+                    i-=1
+                i+=1            
             self.diary = transcription
             
     def Transcribe(self):
