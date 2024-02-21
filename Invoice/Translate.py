@@ -34,7 +34,7 @@ for rec in diary:
         rec[3] = replace_numbers_with_words(rec[3])
         print(rec)
         translation = GoogleTranslator(source=sys.argv[3], target=sys.argv[4]).translate(f'({feature}): '+rec[3])
-        print(rec)
+        print(translation)
         if rec[3].find('：')>=0:
             rec[3] = tool.correct(translation).split('：')[1]
         else:
