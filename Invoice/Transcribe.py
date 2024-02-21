@@ -44,7 +44,7 @@ class Transcriber:
             #match speaker
             last_speaker = ''
             for chunk in chunks:
-                print(chunk['start'],chunk['end'],chunk['seek'],chunk['text'])
+                
                 avg_time = (chunk['seek'])
                 speaker = next(filter(lambda x: x[0]<avg_time and x[1]>avg_time or x[0]>chunk['start'], self.diary), '')
                 if speaker == '':
@@ -108,7 +108,7 @@ class Transcriber:
             while i < len(transcription)-1:
                 text = transcription[i][3].strip()
                 transcription[i][3] = tool.correct(text)
-                print(transcription[i][2],transcription[i][0],transcription[i][1],transcription[i][3])
+                
                 i+=1
             i=0
             while i < len(transcription)-1:
