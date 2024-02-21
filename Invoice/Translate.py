@@ -33,7 +33,7 @@ for rec in diary:
         feature = grammar_modifier[rec[2]]
         rec[3] = replace_numbers_with_words(rec[3])
         translation = GoogleTranslator(source=sys.argv[3], target=sys.argv[4]).translate(f'({feature}): '+rec[3])
-        print(translation)
+        
         if rec[3].find('：')>=0:
             rec[3] = tool.correct(translation).split('：')[1]
         else:
@@ -41,6 +41,6 @@ for rec in diary:
         rec.append(1)
     else:
         rec.append(0)
-
+    print(rec)
 with open(sys.argv[1]+'/transcript.pickle', 'wb') as file:
     pickle.dump(diary, file, protocol=pickle.HIGHEST_PROTOCOL)
