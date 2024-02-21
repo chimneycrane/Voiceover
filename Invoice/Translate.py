@@ -32,6 +32,7 @@ for rec in diary:
             grammar_modifier[rec[2]]='male'#predict(sys.argv[1]+f"/{rec[2]}.wav", sys.argv[2])
         feature = grammar_modifier[rec[2]]
         rec[3] = replace_numbers_with_words(rec[3])
+        print(rec)
         translation = GoogleTranslator(source=sys.argv[3], target=sys.argv[4]).translate(f'({feature}): '+rec[3])
         print(rec)
         if rec[3].find('：')>=0:
